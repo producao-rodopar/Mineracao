@@ -3,324 +3,1805 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rodopar | Ferramentas de perfuração para mineração</title>
-<meta name="description" content="Bits roscados, retracs, alargadores, bits cônicos, fundo de furo DTH, punhos, luvas e hastes. Catálogo consultável, decodificador de part number e guia de aplicação.">
+<title>Rodopar — Ferramentas de perfuração para mineração</title>
+<meta name="description" content="Fabricante brasileiro de ferramentas de perfuração para mineração desde 1991: bits roscados, retrac, alargadores, cone bits, hastes, luvas, punhos e bits fundo de furo. Catálogo interativo, compatibilidade de roscas e guia de operação.">
+<meta name="theme-color" content="#121B21">
+<meta property="og:title" content="Rodopar — Ferramentas de perfuração para mineração">
+<meta property="og:description" content="Bits, hastes, luvas, punhos e bits DTH. Catálogo interativo e guia de coluna de perfuração.">
+<meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/estilo.css">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* =============================================================
+   Rodopar — estilo.css
+   Paleta: aço azulado (têmpera), cinza carbeto, poeira de rocha,
+   amarelo de sinalização de mina e óxido de ferro para alertas.
+   Tipografia: Archivo (títulos) + IBM Plex Sans (texto)
+               + IBM Plex Mono só em códigos de rosca.
+   ============================================================= */
+
+:root{
+  --aco-900:#121b21;
+  --aco-800:#1a252c;
+  --aco-700:#243138;
+  --aco-600:#33434c;
+  --carbeto:#7f9099;
+  --poeira:#e4e3dc;
+  --poeira-clara:#f2f1ec;
+  --branco:#fbfbf9;
+  --sinal:#f2c11b;
+  --sinal-escuro:#c69a06;
+  --oxido:#b24a2b;
+
+  --fonte-titulo:'Archivo','Helvetica Neue',Arial,sans-serif;
+  --fonte-texto:'IBM Plex Sans','Segoe UI',Roboto,sans-serif;
+  --fonte-cod:'IBM Plex Mono',ui-monospace,monospace;
+
+  --largura:1180px;
+  --raio:4px;
+  --borda:1px solid rgba(127,144,153,.28);
+}
+
+*{box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms !important;transition-duration:.001ms !important}
+}
+
+body{
+  margin:0;
+  background:var(--aco-900);
+  color:var(--poeira);
+  font-family:var(--fonte-texto);
+  font-size:16px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+
+h1,h2,h3{font-family:var(--fonte-titulo);font-weight:800;line-height:1.06;letter-spacing:-.02em;margin:0}
+p{margin:0 0 1rem}
+a{color:inherit}
+
+:focus-visible{outline:2px solid var(--sinal);outline-offset:3px}
+
+.pular{
+  position:absolute;left:-999px;top:0;z-index:60;
+  background:var(--sinal);color:var(--aco-900);padding:.7rem 1rem;font-weight:600;
+}
+.pular:focus{left:.5rem;top:.5rem}
+
+/* ---------------- topo ---------------- */
+.topo{
+  position:sticky;top:0;z-index:50;
+  background:rgba(18,27,33,.94);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(127,144,153,.22);
+}
+.topo__interno{
+  max-width:var(--largura);margin:0 auto;padding:.7rem 1.25rem;
+  display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+}
+.marca{text-decoration:none;display:flex;flex-direction:column;line-height:1.1;margin-right:auto}
+.marca__nome{font-family:var(--fonte-titulo);font-weight:800;font-size:1.32rem;letter-spacing:-.03em}
+.marca__desc{font-size:.72rem;color:var(--carbeto);letter-spacing:.03em}
+
+.nav{display:flex;align-items:center;gap:1.35rem;flex-wrap:wrap}
+.nav a{
+  text-decoration:none;font-size:.92rem;color:var(--poeira);
+  padding:.2rem 0;border-bottom:2px solid transparent;
+}
+.nav a:hover{border-bottom-color:var(--sinal)}
+.nav .nav__cta{
+  background:var(--sinal);color:var(--aco-900);font-weight:600;
+  padding:.5rem .95rem;border-radius:var(--raio);border-bottom:none;
+}
+.nav .nav__cta:hover{background:#ffd23f;border-bottom:none}
+
+.menu-botao{
+  display:none;align-items:center;gap:.5rem;
+  background:none;border:var(--borda);color:var(--poeira);
+  border-radius:var(--raio);padding:.45rem .8rem;font:inherit;font-size:.85rem;cursor:pointer;
+}
+.menu-botao__barra{width:16px;height:2px;background:currentColor;box-shadow:0 5px 0 currentColor,0 -5px 0 currentColor}
+
+@media (max-width:860px){
+  .menu-botao{display:inline-flex}
+  .nav{display:none;width:100%;flex-direction:column;align-items:stretch;gap:0;padding-top:.5rem}
+  .nav.nav--aberta{display:flex}
+  .nav a{padding:.75rem .2rem;border-bottom:1px solid rgba(127,144,153,.16)}
+  .nav .nav__cta{margin-top:.6rem;text-align:center}
+}
+
+/* ---------------- hero ---------------- */
+.hero{
+  max-width:var(--largura);margin:0 auto;padding:3.2rem 1.25rem 3rem;
+  display:grid;grid-template-columns:1.15fr .85fr;gap:2.5rem;align-items:start;
+}
+.hero__origem{
+  font-size:.82rem;color:var(--carbeto);margin:0 0 1rem;
+  padding-left:.85rem;border-left:3px solid var(--sinal);
+}
+.hero__titulo{font-size:clamp(2.4rem,5.4vw,4.1rem);max-width:15ch}
+.hero__resumo{margin-top:1.2rem;max-width:52ch;color:#cdcfc9}
+
+.metodo{display:flex;gap:.4rem;flex-wrap:wrap;margin:1.4rem 0 1.6rem}
+.metodo__opcao{
+  font:inherit;font-size:.88rem;cursor:pointer;
+  background:transparent;color:var(--poeira);
+  border:var(--borda);border-radius:var(--raio);padding:.5rem .9rem;
+}
+.metodo__opcao[aria-pressed="true"]{background:var(--poeira);color:var(--aco-900);border-color:var(--poeira);font-weight:600}
+
+.peca-info{
+  border:var(--borda);border-left:3px solid var(--sinal);
+  background:var(--aco-800);border-radius:var(--raio);
+  padding:1.15rem 1.25rem;min-height:190px;
+}
+.peca-info__vazio{color:var(--carbeto);font-size:.92rem;margin:0}
+.peca-info h3{font-size:1.28rem;margin-bottom:.5rem}
+.peca-info__papel{font-size:.76rem;color:var(--sinal);margin:0 0 .55rem;letter-spacing:.04em}
+.peca-info p{font-size:.94rem;margin-bottom:.7rem}
+.peca-info__lista{display:flex;flex-wrap:wrap;gap:.35rem;margin:0 0 .9rem;padding:0;list-style:none}
+.peca-info__lista li{
+  font-family:var(--fonte-cod);font-size:.78rem;
+  background:var(--aco-700);border:1px solid rgba(127,144,153,.3);
+  border-radius:2px;padding:.18rem .45rem;
+}
+.peca-info__acao{display:inline-block;text-decoration:none;font-size:.88rem;font-weight:600;color:var(--sinal);border-bottom:1px solid var(--sinal)}
+
+/* ---------------- diagrama da coluna ---------------- */
+.hero__grafico{position:relative}
+.coluna{width:100%;height:auto;display:block;max-height:78vh;margin-inline:auto}
+.coluna__nota{font-size:.74rem;color:var(--carbeto);text-align:center;margin:.6rem 0 0}
+
+.estrato path{fill:none;stroke:rgba(127,144,153,.24);stroke-width:1}
+.superficie{stroke:var(--carbeto);stroke-width:1.4;opacity:.6}
+.furo{fill:#0d1418;stroke:rgba(127,144,153,.35);stroke-width:1}
+.pó circle{fill:var(--carbeto);opacity:.5}
+
+.peca{cursor:pointer}
+.peca__alvo{fill:transparent}
+.peca__corpo{fill:url(#gradAco);stroke:#0d1418;stroke-width:1}
+.peca__detalhe path{fill:none;stroke:#41525c;stroke-width:1.2;stroke-linecap:round}
+.peca__botoes circle{fill:var(--aco-700);stroke:#0d1418;stroke-width:1}
+.peca__rotulo{
+  font-family:var(--fonte-texto);font-size:12px;fill:var(--carbeto);
+  dominant-baseline:middle;
+}
+.peca__linha{stroke:rgba(127,144,153,.5);stroke-width:1}
+
+.peca:hover .peca__corpo,
+.peca:focus-visible .peca__corpo{stroke:var(--sinal);stroke-width:2}
+.peca:hover .peca__rotulo,
+.peca:focus-visible .peca__rotulo{fill:var(--poeira)}
+.peca:focus{outline:none}
+
+.peca[data-ativa="true"] .peca__corpo{stroke:var(--sinal);stroke-width:2.4}
+.peca[data-ativa="true"] .peca__rotulo{fill:var(--sinal);font-weight:600}
+.peca[data-ativa="true"] .peca__botoes circle{fill:var(--sinal-escuro)}
+.peca--externa .peca__corpo{fill:#3c4a53}
+
+/* revelação única no carregamento */
+.conjunto:not([hidden]) .peca{animation:surgir .5s ease-out both}
+.conjunto:not([hidden]) .peca:nth-of-type(2){animation-delay:.08s}
+.conjunto:not([hidden]) .peca:nth-of-type(3){animation-delay:.16s}
+.conjunto:not([hidden]) .peca:nth-of-type(4){animation-delay:.24s}
+@keyframes surgir{from{opacity:0;transform:translateY(-14px)}to{opacity:1;transform:none}}
+
+@media (max-width:900px){
+  .hero{grid-template-columns:1fr;padding-top:2.2rem}
+  .hero__grafico{order:-1}
+  .coluna{max-width:330px;max-height:none}
+}
+
+/* ---------------- seções ---------------- */
+.secao{max-width:var(--largura);margin:0 auto;padding:3.6rem 1.25rem}
+.secao--claro{
+  max-width:none;background:var(--poeira-clara);color:var(--aco-900);
+}
+.secao--claro > *{max-width:var(--largura);margin-inline:auto}
+.secao--escuro{max-width:none;background:var(--aco-800);border-top:1px solid rgba(127,144,153,.2)}
+.secao--escuro > *{max-width:var(--largura);margin-inline:auto}
+
+.secao__cabeca{margin-bottom:2rem;max-width:60ch}
+.secao__titulo{font-size:clamp(1.7rem,3.2vw,2.5rem)}
+.secao__intro{margin-top:.9rem;color:inherit;opacity:.86;font-size:1rem}
+
+.rotulo{font-size:.78rem;color:var(--carbeto);display:block;margin-bottom:.4rem}
+.secao--claro .rotulo{color:#5b6a72}
+
+/* ---------------- filtros ---------------- */
+.filtros{
+  display:grid;grid-template-columns:minmax(200px,1fr) auto auto auto;
+  gap:1.4rem;align-items:end;padding-bottom:1.6rem;
+  border-bottom:1px solid rgba(127,144,153,.22);
+}
+.filtros__grupo{border:none;margin:0;padding:0;min-width:0}
+.filtros__busca input{
+  width:100%;font:inherit;font-size:.95rem;color:var(--poeira);
+  background:var(--aco-800);border:var(--borda);border-radius:var(--raio);padding:.6rem .8rem;
+}
+.filtros__busca input::placeholder{color:#6d7d86}
+
+.chips{display:flex;flex-wrap:wrap;gap:.35rem}
+.chip{
+  font:inherit;font-family:var(--fonte-cod);font-size:.8rem;cursor:pointer;
+  background:transparent;color:var(--poeira);
+  border:var(--borda);border-radius:2px;padding:.34rem .55rem;
+}
+.chip[aria-pressed="true"]{background:var(--sinal);border-color:var(--sinal);color:var(--aco-900);font-weight:500}
+.chips--grande .chip{font-size:1rem;padding:.55rem .95rem}
+.secao--claro .chip{color:var(--aco-800);border-color:rgba(36,49,56,.28)}
+.secao--claro .chip[aria-pressed="true"]{background:var(--aco-800);border-color:var(--aco-800);color:var(--poeira-clara)}
+
+.botao{
+  display:inline-block;font:inherit;font-size:.9rem;font-weight:600;cursor:pointer;
+  text-decoration:none;text-align:center;
+  background:var(--sinal);color:var(--aco-900);
+  border:1px solid var(--sinal);border-radius:var(--raio);padding:.62rem 1.1rem;
+}
+.botao:hover{background:#ffd23f}
+.botao--vazio{background:transparent;color:inherit;border-color:rgba(127,144,153,.5)}
+.botao--vazio:hover{background:rgba(127,144,153,.14)}
+.botao--destaque{padding:.75rem 1.4rem}
+
+.contagem{font-size:.84rem;color:var(--carbeto);margin:1.4rem 0 1rem}
+
+/* ---------------- grade de produtos ---------------- */
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+
+.cartao{
+  background:var(--aco-800);border:var(--borda);border-radius:var(--raio);
+  padding:1.25rem;display:flex;flex-direction:column;
+}
+.cartao__topo{display:flex;align-items:flex-start;gap:.9rem;margin-bottom:.9rem}
+.cartao__icone{flex:0 0 56px;width:56px;height:56px}
+.cartao__icone svg{width:100%;height:100%}
+.cartao__icone .traco{fill:none;stroke:var(--carbeto);stroke-width:2;stroke-linejoin:round}
+.cartao__icone .cheio{fill:var(--sinal);stroke:none}
+.cartao__nome{font-size:1.12rem;margin-bottom:.2rem}
+.cartao__posicao{font-size:.78rem;color:var(--carbeto);margin:0}
+
+.cartao__funcao{font-size:.92rem;margin-bottom:.9rem;color:#cdcfc9}
+
+.cartao__dados{margin:0 0 .9rem}
+.cartao__dados dt{font-size:.74rem;color:var(--carbeto);margin-bottom:.3rem}
+.cartao__dados dd{margin:0 0 .7rem}
+.cod{
+  display:inline-block;font-family:var(--fonte-cod);font-size:.78rem;
+  background:var(--aco-700);border:1px solid rgba(127,144,153,.3);
+  border-radius:2px;padding:.16rem .42rem;margin:0 .25rem .25rem 0;
+}
+
+.cartao__detalhe{margin-top:auto;border-top:1px solid rgba(127,144,153,.2);padding-top:.8rem}
+.cartao__detalhe summary{cursor:pointer;font-size:.88rem;font-weight:600;color:var(--sinal)}
+.cartao__detalhe p{font-size:.9rem;margin:.7rem 0 0;color:#cdcfc9}
+
+.selo-verificar{
+  display:block;margin-top:.8rem;font-size:.8rem;line-height:1.5;
+  border-left:3px solid var(--oxido);padding:.5rem .7rem;background:rgba(178,74,43,.12);
+}
+.cartao__cta{
+  margin-top:.9rem;font-size:.88rem;font-weight:600;text-decoration:none;
+  color:var(--poeira);border-bottom:1px solid var(--carbeto);align-self:flex-start;
+}
+.cartao__cta:hover{color:var(--sinal);border-bottom-color:var(--sinal)}
+
+.vazio{
+  grid-column:1/-1;border:1px dashed rgba(127,144,153,.4);border-radius:var(--raio);
+  padding:2rem;text-align:center;color:var(--carbeto);
+}
+
+.catalogo-pdf{
+  margin-top:2.4rem;padding-top:1.6rem;border-top:1px solid rgba(127,144,153,.22);
+  display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;
+}
+.catalogo-pdf p{margin:0;font-size:.94rem;color:var(--carbeto)}
+
+/* ---------------- compatibilidade ---------------- */
+.seletor-rosca{margin-bottom:1.6rem}
+.resultado-rosca{margin-bottom:2.2rem;min-height:60px}
+.resultado-rosca__caixa{
+  background:var(--branco);border:1px solid rgba(36,49,56,.16);
+  border-left:3px solid var(--aco-800);border-radius:var(--raio);padding:1.2rem 1.35rem;
+}
+.resultado-rosca h3{font-size:1.2rem;margin-bottom:.7rem}
+.resultado-rosca ul{margin:0;padding-left:1.1rem}
+.resultado-rosca li{margin-bottom:.35rem}
+.resultado-rosca__nada{color:#5b6a72;font-size:.94rem;margin:0}
+.resultado-rosca a{font-weight:600}
+
+.tabela-envolve{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tabela{width:100%;border-collapse:collapse;font-size:.9rem;min-width:600px}
+.tabela caption{text-align:left;font-size:.8rem;color:#5b6a72;padding-bottom:.7rem}
+.tabela th,.tabela td{padding:.6rem .7rem;text-align:left;border-bottom:1px solid rgba(36,49,56,.14)}
+.tabela thead th{font-size:.78rem;font-weight:600;border-bottom:2px solid var(--aco-800);white-space:nowrap}
+.tabela tbody th{font-weight:500}
+.tabela td[data-tem="1"]{color:var(--aco-900);font-weight:600}
+.tabela td[data-tem="0"]{color:#a9b2b7}
+.marca-sim{color:var(--oxido)}
+
+.oculto-visual{
+  position:absolute;width:1px;height:1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;
+}
+
+.aviso{font-size:.84rem;color:#5b6a72;margin-top:1rem;max-width:70ch}
+.aviso--forte{
+  border-left:3px solid var(--oxido);padding:.7rem .9rem;
+  background:rgba(178,74,43,.1);color:inherit;margin-top:1.2rem;
+}
+
+/* ---------------- operação ---------------- */
+.operacao{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;align-items:start}
+.painel{background:var(--aco-800);border:var(--borda);border-radius:var(--raio);padding:1.5rem}
+.painel__titulo{font-size:1.3rem;margin-bottom:.7rem}
+.painel__ajuda{font-size:.88rem;color:var(--carbeto)}
+.painel .tabela{min-width:520px}
+.painel .tabela caption{color:var(--carbeto)}
+.painel .tabela th,.painel .tabela td{border-bottom-color:rgba(127,144,153,.2)}
+.painel .tabela thead th{border-bottom:2px solid var(--carbeto);color:var(--poeira)}
+.painel .tabela td{color:#cdcfc9}
+
+.progresso{margin:1.1rem 0}
+.progresso__barra{height:6px;background:var(--aco-700);border-radius:3px;overflow:hidden}
+.progresso__barra span{display:block;height:100%;width:0;background:var(--sinal);transition:width .25s ease}
+.progresso__texto{font-size:.8rem;color:var(--carbeto);margin:.45rem 0 0}
+
+.checklist__grupo{margin-bottom:1.1rem}
+.checklist__grupo h4{
+  font-family:var(--fonte-texto);font-size:.78rem;font-weight:600;color:var(--sinal);
+  margin:0 0 .5rem;letter-spacing:.03em;
+}
+.checklist__item{display:flex;gap:.6rem;align-items:flex-start;padding:.32rem 0;font-size:.92rem;cursor:pointer}
+.checklist__item input{margin-top:.35rem;accent-color:var(--sinal);width:16px;height:16px;flex:0 0 auto}
+.checklist__item input:checked + span{color:var(--carbeto);text-decoration:line-through}
+
+.painel__acoes{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.resumo{
+  margin-top:1rem;background:var(--aco-900);border:var(--borda);border-radius:var(--raio);
+  padding:1rem;font-family:var(--fonte-cod);font-size:.78rem;line-height:1.6;
+  white-space:pre-wrap;max-height:280px;overflow:auto;
+}
+
+@media (max-width:900px){
+  .operacao{grid-template-columns:1fr}
+  .filtros{grid-template-columns:1fr}
+}
+
+/* ---------------- glossário ---------------- */
+.glossario{display:grid;grid-template-columns:1fr 1fr;gap:.7rem 1.6rem}
+.termo{border-bottom:1px solid rgba(36,49,56,.16)}
+.termo summary{
+  cursor:pointer;padding:.85rem 0;font-family:var(--fonte-titulo);
+  font-weight:700;font-size:1.02rem;letter-spacing:-.01em;
+}
+.termo summary::marker{color:var(--oxido)}
+.termo p{font-size:.92rem;margin:0 0 1rem;max-width:56ch;color:#3d4a51}
+
+@media (max-width:760px){ .glossario{grid-template-columns:1fr} }
+
+/* ---------------- serviços ---------------- */
+.servicos{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem}
+.servico{
+  border:var(--borda);border-top:3px solid var(--carbeto);border-radius:var(--raio);
+  padding:1.3rem;background:var(--aco-800);
+}
+.servico h3{font-size:1.16rem;margin-bottom:.6rem}
+.servico p{font-size:.92rem;color:#cdcfc9;margin-bottom:.7rem}
+.servico ul{margin:0;padding-left:1.1rem;font-size:.9rem;color:#cdcfc9}
+.servico li{margin-bottom:.25rem}
+
+/* ---------------- orçamento ---------------- */
+.orcamento{display:grid;grid-template-columns:.9fr 1.1fr;gap:2.5rem;padding:3.6rem 1.25rem}
+.contato{margin:1.8rem 0 0;display:grid;grid-template-columns:auto 1fr;gap:.5rem 1.2rem;font-size:.94rem}
+.contato dt{color:var(--carbeto);font-size:.82rem;padding-top:.1rem}
+.contato dd{margin:0}
+.contato a{text-decoration:none;border-bottom:1px solid var(--sinal)}
+
+.form{background:var(--aco-900);border:var(--borda);border-radius:var(--raio);padding:1.6rem}
+.form__linha{margin-bottom:1rem}
+.form__duplo{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.form label{display:block;font-size:.8rem;color:var(--carbeto);margin-bottom:.35rem}
+.form input,.form select,.form textarea{
+  width:100%;font:inherit;font-size:.95rem;color:var(--poeira);
+  background:var(--aco-800);border:var(--borda);border-radius:var(--raio);padding:.6rem .75rem;
+}
+.form textarea{resize:vertical}
+.form input::placeholder,.form textarea::placeholder{color:#6d7d86}
+.form input[aria-invalid="true"],.form select[aria-invalid="true"]{border-color:var(--oxido)}
+.form__erro{color:#e8886a;font-size:.86rem;margin:0 0 1rem}
+.form__acoes{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1.2rem}
+
+@media (max-width:900px){
+  .orcamento{grid-template-columns:1fr;gap:2rem}
+  .form__duplo{grid-template-columns:1fr;gap:0}
+}
+
+/* ---------------- rodapé ---------------- */
+.rodape{border-top:1px solid rgba(127,144,153,.22);padding:2.6rem 1.25rem 3rem;background:var(--aco-900)}
+.rodape__interno{
+  max-width:var(--largura);margin:0 auto;display:flex;gap:2rem;
+  justify-content:space-between;flex-wrap:wrap;
+}
+.rodape__marca{font-family:var(--fonte-titulo);font-weight:800;font-size:1.2rem;margin:0 0 .5rem}
+.rodape__linha{font-size:.88rem;color:var(--carbeto);margin:0 0 .3rem;max-width:44ch}
+.rodape__redes{display:flex;flex-direction:column;gap:.4rem;font-size:.9rem}
+.rodape__redes a{text-decoration:none;color:var(--poeira);border-bottom:1px solid transparent;align-self:flex-start}
+.rodape__redes a:hover{border-bottom-color:var(--sinal)}
+.rodape__nota{
+  max-width:var(--largura);margin:2rem auto 0;padding-top:1.4rem;
+  border-top:1px solid rgba(127,144,153,.16);
+  font-size:.8rem;color:#6d7d86;
+}
+
+/* ---------------- botão flutuante ---------------- */
+.zap-flutuante{
+  position:fixed;right:1rem;bottom:1rem;z-index:45;
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:var(--sinal);color:var(--aco-900);text-decoration:none;
+  font-size:.88rem;font-weight:600;padding:.7rem 1.1rem;border-radius:999px;
+  box-shadow:0 6px 20px rgba(0,0,0,.4);
+}
+.zap-flutuante span{color:#1c7a45;font-size:.7rem}
+.zap-flutuante:hover{background:#ffd23f}
+@media (max-width:520px){ .zap-flutuante{left:1rem;right:1rem;justify-content:center} }
+
+</style>
 </head>
 <body>
 
-<header class="topo">
+<a class="pular" href="#catalogo">Ir direto para o catálogo</a>
+
+<header class="topo" id="topo">
   <div class="topo__interno">
     <a class="marca" href="#topo">
-      <span class="marca__nome">rodo<span>par</span></span>
-      <span class="marca__desc">ferramentas de perfuração</span>
+      <span class="marca__nome">Rodopar</span>
+      <span class="marca__desc">Ferramentas de perfuração</span>
     </a>
-    <nav class="menu" aria-label="Seções">
-      <a href="#coluna">Coluna</a>
+
+    <button class="menu-botao" id="menuBotao" aria-expanded="false" aria-controls="navPrincipal">
+      <span class="menu-botao__barra"></span>
+      Menu
+    </button>
+
+    <nav class="nav" id="navPrincipal" aria-label="Navegação principal">
+      <a href="#coluna">Coluna de perfuração</a>
       <a href="#catalogo">Catálogo</a>
+      <a href="#compatibilidade">Compatibilidade</a>
       <a href="#operacao">Operação</a>
-      <a href="#glossario">Glossário</a>
-      <a href="#servicos">Usinagem</a>
-      <a href="#cotacao">Cotação</a>
+      <a href="#servicos">Serviços</a>
+      <a class="nav__cta" href="#orcamento">Pedir orçamento</a>
     </nav>
-    <button class="contador-topo" id="contadorTopo" hidden>Cotação: <span id="qtdTopo">0</span></button>
   </div>
 </header>
 
-<!-- ===================== HERO: DECODIFICADOR ===================== -->
-<section class="hero" id="topo">
-  <div class="hero__interno">
-    <div>
-      <h1>A rocha é dura. Achar a ferramenta certa não precisa ser.</h1>
-      <p class="hero__sub">Fabricamos bits, punhos, luvas e hastes para perfuração de rocha desde 1991, em Lauro de Freitas, Bahia. Todo produto carrega um código que diz exatamente o que ele é. Comece por ele.</p>
-      <div class="hero__meta">
-        <span>Roscas R25 a ST58</span>
-        <span>Top hammer e DTH</span>
-        <span>Projetos especiais sob desenho</span>
-      </div>
+<!-- ============================================================
+     HERO + DIAGRAMA INTERATIVO DA COLUNA
+     ============================================================ -->
+<main>
+<section class="hero" id="coluna">
+  <div class="hero__texto">
+    <p class="hero__origem">Lauro de Freitas, Bahia — fabricando desde 1991</p>
+    <h1 class="hero__titulo">A ferramenta que encosta na rocha</h1>
+    <p class="hero__resumo">
+      Fabricamos a coluna completa de perfuração rotopercussiva: do punho que recebe
+      o impacto ao bit que fragmenta a rocha. Clique em qualquer peça da coluna ao lado
+      para entender a função dela, ver os modelos disponíveis e ir direto ao produto.
+    </p>
+
+    <div class="metodo" role="group" aria-label="Escolha o método de perfuração">
+      <button class="metodo__opcao" data-metodo="tophammer" aria-pressed="true">Top hammer</button>
+      <button class="metodo__opcao" data-metodo="conica" aria-pressed="false">Cônica</button>
+      <button class="metodo__opcao" data-metodo="dth" aria-pressed="false">Fundo de furo</button>
     </div>
 
-    <div class="decodificador">
-      <div class="decodificador__titulo">Decodificador de part number</div>
-      <p class="decodificador__ajuda">Digite o código gravado na ferramenta e veja o que cada trecho significa, conforme o guia de códigos do nosso catálogo.</p>
-      <div class="campo-pn">
-        <input id="entradaPN" type="text" value="BR102-T38N-683-20" spellcheck="false" autocomplete="off" aria-label="Part number">
-      </div>
-      <div class="exemplos" id="exemplosPN"></div>
-      <div class="leitura" id="leituraPN" aria-live="polite"></div>
+    <!-- Painel de informação da peça selecionada -->
+    <div class="peca-info" id="pecaInfo" aria-live="polite">
+      <p class="peca-info__vazio">Nenhuma peça selecionada. Toque em um componente da coluna.</p>
     </div>
   </div>
-</section>
 
-<div class="aviso">
-  Site de demonstração construído a partir do catálogo público da Rodopar. <strong>Dados técnicos exigem conferência antes de compra ou uso em campo.</strong>
-</div>
+  <div class="hero__grafico">
+    <svg class="coluna" id="colunaSvg" viewBox="0 0 300 580" role="group"
+         aria-label="Diagrama da coluna de perfuração. Use Tab para navegar entre as peças.">
+      <defs>
+        <linearGradient id="gradRocha" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#243138"/>
+          <stop offset="100%" stop-color="#161f25"/>
+        </linearGradient>
+        <linearGradient id="gradAco" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#5f7280"/>
+          <stop offset="42%" stop-color="#b7c3ca"/>
+          <stop offset="100%" stop-color="#576976"/>
+        </linearGradient>
+        <clipPath id="cortaRocha"><rect x="0" y="252" width="300" height="328"/></clipPath>
+      </defs>
 
-<!-- ===================== COLUNA DE PERFURAÇÃO ===================== -->
-<section class="faixa" id="coluna">
-  <div class="interno">
-    <div class="cabeca-secao">
-      <h2>Monte a coluna</h2>
-      <p>Escolha a rosca e clique em cada peça do conjunto para ver o que existe em catálogo naquele padrão.</p>
-    </div>
-
-    <div class="coluna-controles" id="controlesRosca" role="group" aria-label="Padrão de rosca">
-      <span class="rotulo">Rosca:</span>
-    </div>
-
-    <svg class="esquema" viewBox="0 0 920 200" role="group" aria-label="Esquema de uma coluna de perfuração top hammer">
-      <line x1="20" y1="100" x2="900" y2="100" stroke="#c3cdcb" stroke-width="1" stroke-dasharray="3 4"/>
-
-      <!-- PUNHO -->
-      <g class="esquema-parte" data-papel="punho" tabindex="0" role="button" aria-label="Punho">
-        <rect x="28" y="82" width="26" height="36" fill="#4a6570"/>
-        <rect x="54" y="86" width="8" height="28" fill="#16232a"/>
-        <rect x="62" y="86" width="8" height="28" fill="#4a6570"/>
-        <rect x="70" y="86" width="8" height="28" fill="#16232a"/>
-        <rect x="78" y="86" width="8" height="28" fill="#4a6570"/>
-        <rect x="86" y="88" width="52" height="24" fill="#4a6570"/>
-        <rect x="138" y="92" width="16" height="16" fill="#7e959e"/>
-        <text class="esquema-rotulo" x="28" y="70">punho</text>
-        <text class="esquema-rotulo" x="28" y="146">recebe o impacto</text>
+      <!-- maciço rochoso -->
+      <g clip-path="url(#cortaRocha)" aria-hidden="true">
+        <rect x="0" y="252" width="300" height="328" fill="url(#gradRocha)"/>
+        <g class="estrato">
+          <path d="M0 288 C60 280 120 300 180 292 S260 278 300 286"/>
+          <path d="M0 340 C70 350 130 328 200 340 S270 352 300 344"/>
+          <path d="M0 398 C80 388 140 408 210 396 S280 386 300 392"/>
+          <path d="M0 458 C60 466 140 448 200 458 S270 470 300 462"/>
+          <path d="M0 516 C70 508 150 524 220 514 S280 506 300 512"/>
+        </g>
+        <path class="superficie" d="M0 252 H300"/>
       </g>
 
-      <!-- LUVA 1 -->
-      <g class="esquema-parte" data-papel="luva" tabindex="0" role="button" aria-label="Luva">
-        <rect x="154" y="80" width="72" height="40" rx="2" fill="#4a6570"/>
-        <line x1="190" y1="80" x2="190" y2="120" stroke="#16232a" stroke-width="2"/>
-        <text class="esquema-rotulo" x="154" y="70">luva</text>
-        <text class="esquema-rotulo" x="154" y="146">conecta rosca a rosca</text>
+      <!-- ---------- TOP HAMMER ---------- -->
+      <g class="conjunto" data-conjunto="tophammer">
+        <!-- furo -->
+        <rect class="furo" x="118" y="252" width="64" height="150" rx="2"/>
+
+        <g class="peca" data-peca="punhos" tabindex="0" role="button"
+           aria-label="Punho, primeira peça da coluna">
+          <rect class="peca__corpo" x="132" y="34" width="36" height="76" rx="3"/>
+          <g class="peca__detalhe">
+            <path d="M136 44h28M136 52h28M136 60h28M136 68h28M136 76h28"/>
+          </g>
+          <rect class="peca__alvo" x="120" y="28" width="60" height="88"/>
+          <text class="peca__rotulo" x="196" y="76">Punho</text>
+          <path class="peca__linha" d="M172 72h18"/>
+        </g>
+
+        <g class="peca" data-peca="luvas" tabindex="0" role="button"
+           aria-label="Luva de emenda">
+          <rect class="peca__corpo" x="128" y="112" width="44" height="34" rx="3"/>
+          <g class="peca__detalhe"><path d="M132 122h36M132 136h36"/></g>
+          <rect class="peca__alvo" x="120" y="110" width="60" height="38"/>
+          <text class="peca__rotulo" x="196" y="134">Luva</text>
+          <path class="peca__linha" d="M176 130h14"/>
+        </g>
+
+        <g class="peca" data-peca="hastes" tabindex="0" role="button"
+           aria-label="Haste de perfuração">
+          <rect class="peca__corpo" x="140" y="148" width="20" height="182" rx="2"/>
+          <g class="peca__detalhe"><path d="M150 156v166"/></g>
+          <rect class="peca__alvo" x="126" y="148" width="48" height="182"/>
+          <text class="peca__rotulo" x="196" y="214">Haste</text>
+          <path class="peca__linha" d="M164 210h26"/>
+        </g>
+
+        <g class="peca" data-peca="bits-roscados" tabindex="0" role="button"
+           aria-label="Bit roscado na ponta da coluna">
+          <path class="peca__corpo" d="M126 332h48v34c0 10-8 16-24 16s-24-6-24-16z"/>
+          <g class="peca__botoes">
+            <circle cx="138" cy="374" r="4"/><circle cx="150" cy="379" r="4"/>
+            <circle cx="162" cy="374" r="4"/><circle cx="130" cy="364" r="3.4"/>
+            <circle cx="170" cy="364" r="3.4"/>
+          </g>
+          <rect class="peca__alvo" x="118" y="330" width="64" height="58"/>
+          <text class="peca__rotulo" x="196" y="366">Bit</text>
+          <path class="peca__linha" d="M180 362h10"/>
+        </g>
+
+        <g class="pó" aria-hidden="true">
+          <circle cx="112" cy="392" r="2.5"/><circle cx="192" cy="386" r="2"/>
+          <circle cx="104" cy="372" r="1.8"/><circle cx="200" cy="400" r="2.4"/>
+        </g>
       </g>
 
-      <!-- HASTE -->
-      <g class="esquema-parte" data-papel="haste" tabindex="0" role="button" aria-label="Haste">
-        <rect x="226" y="90" width="330" height="20" fill="#4a6570"/>
-        <rect x="226" y="96" width="330" height="8" fill="#3b525c"/>
-        <text class="esquema-rotulo" x="226" y="80">haste</text>
-        <text class="esquema-rotulo" x="226" y="146">transmite impacto, rotação e limpeza</text>
+      <!-- ---------- CÔNICA ---------- -->
+      <g class="conjunto" data-conjunto="conica" hidden>
+        <rect class="furo" x="126" y="252" width="48" height="120" rx="2"/>
+
+        <g class="peca" data-peca="punhos" tabindex="0" role="button" aria-label="Punho">
+          <rect class="peca__corpo" x="132" y="60" width="36" height="72" rx="3"/>
+          <g class="peca__detalhe"><path d="M136 70h28M136 78h28M136 86h28M136 94h28"/></g>
+          <rect class="peca__alvo" x="120" y="54" width="60" height="84"/>
+          <text class="peca__rotulo" x="196" y="100">Punho</text>
+          <path class="peca__linha" d="M172 96h18"/>
+        </g>
+
+        <g class="peca" data-peca="hastes-conicas" tabindex="0" role="button"
+           aria-label="Haste cônica sextavada">
+          <path class="peca__corpo" d="M138 134h24v170l-12 12-12-12z"/>
+          <g class="peca__detalhe"><path d="M144 142v158M156 142v158"/></g>
+          <rect class="peca__alvo" x="126" y="134" width="48" height="182"/>
+          <text class="peca__rotulo" x="196" y="222">Haste sextavada</text>
+          <path class="peca__linha" d="M166 218h24"/>
+        </g>
+
+        <g class="peca" data-peca="cone-bits" tabindex="0" role="button" aria-label="Cone bit">
+          <path class="peca__corpo" d="M134 318h32l6 30c0 8-8 12-22 12s-22-4-22-12z"/>
+          <g class="peca__botoes">
+            <circle cx="142" cy="352" r="3.6"/><circle cx="150" cy="356" r="3.6"/>
+            <circle cx="158" cy="352" r="3.6"/>
+          </g>
+          <rect class="peca__alvo" x="120" y="316" width="60" height="50"/>
+          <text class="peca__rotulo" x="196" y="346">Cone bit</text>
+          <path class="peca__linha" d="M176 342h14"/>
+        </g>
       </g>
 
-      <!-- LUVA 2 -->
-      <g class="esquema-parte" data-papel="luva" tabindex="0" role="button" aria-label="Luva">
-        <rect x="556" y="80" width="72" height="40" rx="2" fill="#4a6570"/>
-        <line x1="592" y1="80" x2="592" y2="120" stroke="#16232a" stroke-width="2"/>
-      </g>
+      <!-- ---------- DTH ---------- -->
+      <g class="conjunto" data-conjunto="dth" hidden>
+        <rect class="furo" x="120" y="252" width="60" height="250" rx="2"/>
 
-      <!-- HASTE 2 -->
-      <g class="esquema-parte" data-papel="haste" tabindex="0" role="button" aria-label="Haste">
-        <rect x="628" y="90" width="130" height="20" fill="#4a6570"/>
-        <rect x="628" y="96" width="130" height="8" fill="#3b525c"/>
-      </g>
+        <g class="peca peca--externa" data-peca="tubo" tabindex="0" role="button"
+           aria-label="Tubo de perfuração, item do equipamento">
+          <rect class="peca__corpo" x="138" y="40" width="24" height="290" rx="2"/>
+          <g class="peca__detalhe"><path d="M150 50v270"/></g>
+          <rect class="peca__alvo" x="126" y="40" width="48" height="290"/>
+          <text class="peca__rotulo" x="196" y="150">Tubo</text>
+          <path class="peca__linha" d="M166 146h24"/>
+        </g>
 
-      <!-- BIT -->
-      <g class="esquema-parte" data-papel="bit" tabindex="0" role="button" aria-label="Bit">
-        <rect x="758" y="86" width="22" height="28" fill="#4a6570"/>
-        <path d="M780 74 h68 a10 10 0 0 1 10 10 v32 a10 10 0 0 1 -10 10 h-68 z" fill="#16232a"/>
-        <circle cx="862" cy="82" r="7" fill="#c3cdcb"/>
-        <circle cx="862" cy="100" r="7" fill="#c3cdcb"/>
-        <circle cx="862" cy="118" r="7" fill="#c3cdcb"/>
-        <circle cx="838" cy="76" r="6" fill="#c3cdcb"/>
-        <circle cx="838" cy="124" r="6" fill="#c3cdcb"/>
-        <text class="esquema-rotulo" x="758" y="64">bit</text>
-        <text class="esquema-rotulo" x="700" y="164">quebra a rocha</text>
+        <g class="peca peca--externa" data-peca="martelo" tabindex="0" role="button"
+           aria-label="Martelo de fundo, item do equipamento">
+          <rect class="peca__corpo" x="130" y="332" width="40" height="86" rx="3"/>
+          <g class="peca__detalhe"><path d="M134 348h32M134 402h32"/></g>
+          <rect class="peca__alvo" x="120" y="330" width="60" height="90"/>
+          <text class="peca__rotulo" x="196" y="380">Martelo de fundo</text>
+          <path class="peca__linha" d="M174 376h16"/>
+        </g>
+
+        <g class="peca" data-peca="bits-dth" tabindex="0" role="button" aria-label="Bit fundo de furo">
+          <path class="peca__corpo" d="M126 420h48v36c0 10-8 16-24 16s-24-6-24-16z"/>
+          <g class="peca__botoes">
+            <circle cx="138" cy="464" r="4"/><circle cx="150" cy="469" r="4"/>
+            <circle cx="162" cy="464" r="4"/><circle cx="130" cy="453" r="3.4"/>
+            <circle cx="170" cy="453" r="3.4"/>
+          </g>
+          <rect class="peca__alvo" x="118" y="418" width="64" height="60"/>
+          <text class="peca__rotulo" x="196" y="456">Bit DTH</text>
+          <path class="peca__linha" d="M180 452h10"/>
+        </g>
       </g>
     </svg>
-
-    <div class="coluna-detalhe">
-      <div class="coluna-detalhe__texto" id="textoPeca"></div>
-      <div id="tabelaPeca"></div>
-    </div>
+    <p class="coluna__nota">Desenho esquemático, fora de escala.</p>
   </div>
 </section>
 
-<!-- ===================== CATÁLOGO ===================== -->
-<section class="faixa faixa--alta" id="catalogo">
-  <div class="interno">
-    <div class="cabeca-secao">
-      <h2>Catálogo consultável</h2>
-      <p>Filtre por família, rosca, diâmetro ou part number. Marque os itens para montar um pedido de cotação.</p>
+<!-- ============================================================
+     CATÁLOGO
+     ============================================================ -->
+<section class="secao" id="catalogo">
+  <div class="secao__cabeca">
+    <h2 class="secao__titulo">Catálogo</h2>
+    <p class="secao__intro">
+      Filtre por rosca, por método de perfuração ou busque pelo nome que você usa no dia a dia.
+      Cada cartão abre a função da peça e o que pesar na especificação.
+    </p>
+  </div>
+
+  <div class="filtros">
+    <div class="filtros__busca">
+      <label class="rotulo" for="busca">Buscar</label>
+      <input type="search" id="busca" placeholder="bit retrac, punho COP131, T45…" autocomplete="off">
     </div>
 
-    <div class="filtros">
-      <div>
-        <label for="busca">Buscar por código, rosca ou detalhe</label>
-        <input id="busca" type="search" placeholder="ex.: T38 retrac, BR102, punho HL700" autocomplete="off">
-      </div>
-      <div>
-        <label for="filtroFamilia">Família</label>
-        <select id="filtroFamilia"></select>
-      </div>
-      <div>
-        <label for="filtroRosca">Rosca / conicidade</label>
-        <select id="filtroRosca"></select>
-      </div>
-    </div>
+    <fieldset class="filtros__grupo">
+      <legend class="rotulo">Rosca</legend>
+      <div class="chips" id="chipsRosca"></div>
+    </fieldset>
 
-    <div class="resumo-resultados" id="resumoResultados"></div>
-    <div class="envolve-tabela">
-      <table class="tabela">
-        <thead>
-          <tr>
-            <th>Família</th><th>Rosca</th><th>Ø mm</th><th>Ø pol</th><th>L mm</th><th>Detalhe</th><th>Part number</th><th></th>
-          </tr>
-        </thead>
-        <tbody id="corpoTabela"></tbody>
-      </table>
-    </div>
-    <button class="mais" id="verMais" hidden>Ver mais itens</button>
+    <fieldset class="filtros__grupo">
+      <legend class="rotulo">Método</legend>
+      <div class="chips" id="chipsMetodo"></div>
+    </fieldset>
+
+    <button class="botao botao--vazio" id="limparFiltros">Limpar filtros</button>
+  </div>
+
+  <p class="contagem" id="contagem" aria-live="polite"></p>
+  <div class="grade" id="grade"></div>
+
+  <div class="catalogo-pdf">
+    <p>Catálogo completo em PDF, direto do site da fábrica:</p>
+    <a class="botao" id="linkCatalogo" href="#" target="_blank" rel="noopener">Abrir catálogo em PDF</a>
   </div>
 </section>
 
-<!-- ===================== OPERAÇÃO ===================== -->
-<section class="faixa faixa--escura" id="operacao">
-  <div class="interno">
-    <div class="cabeca-secao">
-      <h2>Escolha do botão</h2>
-      <p>O formato do inserto de metal duro define o comportamento do bit na rocha. Indicações conforme o guia de códigos do catálogo Rodopar.</p>
-    </div>
-
-    <div class="grade-botoes" id="gradeBotoes"></div>
-
-    <div class="checklist">
-      <div>
-        <h3>Inspeção antes de descer a coluna</h3>
-        <ul>
-          <li>Furos de limpeza desobstruídos, frontais e laterais.</li>
-          <li>Botões sem trincas, lascas ou botão faltando.</li>
-          <li>Rosca do bit e da haste limpas, sem amassados nem rebarba.</li>
-          <li>Face do punho sem afundamento ou marca de martelamento.</li>
-          <li>Luva sem folga na rosca e com o batente íntegro.</li>
-        </ul>
-      </div>
-      <div>
-        <h3>Sinais de que a ferramenta precisa sair de operação</h3>
-        <ul>
-          <li>Queda na taxa de penetração com pressão e rotação normais.</li>
-          <li>Botão achatado ao ponto de perder a geometria original.</li>
-          <li>Aumento de vibração ou ruído fora do padrão no furo.</li>
-          <li>Desvio de furo repetido no mesmo trecho da malha.</li>
-          <li>Aquecimento anormal do punho ou da conexão.</li>
-        </ul>
-      </div>
-    </div>
-
-    <p class="nota">Os itens de inspeção acima são práticas gerais de perfuração de rocha, não recomendação técnica da Rodopar para uma operação específica. Critérios de troca, torque de aperto e afiação devem seguir o procedimento da sua mina e a orientação do fabricante da perfuratriz.</p>
+<!-- ============================================================
+     COMPATIBILIDADE DE ROSCAS
+     ============================================================ -->
+<section class="secao secao--claro" id="compatibilidade">
+  <div class="secao__cabeca">
+    <h2 class="secao__titulo">Monte a coluna pela rosca</h2>
+    <p class="secao__intro">
+      Escolha a rosca que já roda na sua frente de serviço e veja o que a Rodopar
+      fornece nesse padrão. Peças de padrões diferentes só se unem com adaptador.
+    </p>
   </div>
+
+  <div class="seletor-rosca" role="group" aria-label="Escolha a rosca">
+    <div class="chips chips--grande" id="chipsSeletor"></div>
+  </div>
+
+  <div id="resultadoRosca" class="resultado-rosca" aria-live="polite"></div>
+
+  <div class="tabela-envolve">
+    <table class="tabela">
+      <caption>Disponibilidade por família e rosca, conforme informação publicada pela fábrica</caption>
+      <thead><tr id="tabelaCabeca"></tr></thead>
+      <tbody id="tabelaCorpo"></tbody>
+    </table>
+  </div>
+  <p class="aviso">
+    Célula vazia significa que a rosca não aparece na informação pública daquela família —
+    não que ela seja inviável. Confirme com o Comercial antes de fechar especificação.
+  </p>
 </section>
 
-<!-- ===================== GLOSSÁRIO ===================== -->
-<section class="faixa" id="glossario">
-  <div class="interno">
-    <div class="cabeca-secao">
-      <h2>Como isso funciona</h2>
-      <p>Para quem chegou aqui por curiosidade, ou para quem vai explicar o processo a alguém de fora da operação.</p>
-    </div>
-
-    <div id="listaGlossario"></div>
-
-    <div class="comparativo">
-      <div>
-        <h3>Top hammer</h3>
-        <p>O martelo fica na superfície. A onda de choque percorre punho, hastes e luvas até chegar ao bit. Montagem mais simples e ferramental mais barato, com perda de energia em cada conexão. Quanto mais fundo o furo, mais essa perda pesa.</p>
-      </div>
-      <div>
-        <h3>DTH, fundo de furo</h3>
-        <p>O martelo desce dentro do furo, logo acima do bit. O impacto chega direto na ferramenta, sem atravessar a coluna, o que sustenta a energia em furos profundos e ajuda a manter o furo reto. A coluna passa a servir para rotação, ar e avanço.</p>
-      </div>
-    </div>
+<!-- ============================================================
+     OPERAÇÃO
+     ============================================================ -->
+<section class="secao" id="operacao">
+  <div class="secao__cabeca">
+    <h2 class="secao__titulo">Para quem opera</h2>
+    <p class="secao__intro">
+      Custo por metro perfurado se decide no campo, não na compra. Abaixo, a inspeção
+      de rotina e os sinais que antecedem uma parada.
+    </p>
   </div>
-</section>
 
-<!-- ===================== SERVIÇOS ===================== -->
-<section class="faixa faixa--alta" id="servicos">
-  <div class="interno">
-    <div class="cabeca-secao">
-      <h2>Fábrica</h2>
-      <p>Além da linha de mineração, a Rodopar atende petróleo e gás, petroquímica, siderurgia, naval, alimentos e bebidas e automotivo.</p>
-    </div>
-
-    <div class="grade-servicos">
-      <div class="servico">
-        <h3>Usinagem de alta precisão</h3>
-        <p>Peças de alta pressão (HP) e super alta pressão (SHP).</p>
+  <div class="operacao">
+    <div class="painel">
+      <h3 class="painel__titulo">Inspeção de ferramenta</h3>
+      <p class="painel__ajuda">
+        Marque o que foi verificado. Nada é gravado no servidor: a marcação vive só
+        neste navegador, e o botão abaixo gera um texto para colar no seu registro.
+      </p>
+      <div class="progresso">
+        <div class="progresso__barra"><span id="progressoPreenchida"></span></div>
+        <p class="progresso__texto" id="progressoTexto" aria-live="polite"></p>
       </div>
-      <div class="servico">
-        <h3>Peças especiais</h3>
-        <p>Fabricação sob medida a partir de desenho, amostra ou croqui.</p>
+      <div id="checklist" class="checklist"></div>
+      <div class="painel__acoes">
+        <button class="botao" id="gerarResumo">Gerar resumo da inspeção</button>
+        <button class="botao botao--vazio" id="zerarChecklist">Desmarcar tudo</button>
       </div>
-      <div class="servico">
-        <h3>Tratamento térmico</h3>
-        <p>Fornos de atmosfera controlada até 3,5 metros. Têmpera e revenimento, cementação, normalização e alívio de tensões.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ===================== COTAÇÃO ===================== -->
-<section class="faixa" id="cotacao">
-  <div class="interno">
-    <div class="cabeca-secao">
-      <h2>Pedido de cotação</h2>
-      <p>Os itens marcados no catálogo aparecem aqui. Ajuste as quantidades e envie por WhatsApp ou e-mail.</p>
-    </div>
-
-    <div class="cotacao">
-      <div>
-        <ul class="lista-cotacao" id="listaCotacao"></ul>
-        <div class="acoes">
-          <button class="botao botao--cheio" id="enviarWhats">Enviar por WhatsApp</button>
-          <button class="botao" id="enviarEmail">Enviar por e-mail</button>
-          <button class="botao" id="limparLista">Limpar lista</button>
-        </div>
-      </div>
-      <div class="campos-contato">
-        <div>
-          <label for="cEmpresa">Empresa ou mina</label>
-          <input id="cEmpresa" type="text" autocomplete="organization">
-        </div>
-        <div>
-          <label for="cNome">Seu nome</label>
-          <input id="cNome" type="text" autocomplete="name">
-        </div>
-        <div>
-          <label for="cObs">Aplicação, tipo de rocha, perfuratriz</label>
-          <textarea id="cObs" placeholder="ex.: banco de 12 m, rocha abrasiva, perfuratriz HL700"></textarea>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<footer class="rodape">
-  <div class="rodape__grade">
-    <div>
-      <h3>Contato</h3>
-      <p>
-        <a href="tel:+557133791330">(71) 3379-1330</a><br>
-        <a href="https://api.whatsapp.com/send?phone=5571993803830">WhatsApp (71) 99380-3830</a><br>
-        <a href="mailto:rodopar@rodopar.ind.br">rodopar@rodopar.ind.br</a>
+      <pre class="resumo" id="resumoInspecao" hidden></pre>
+      <p class="aviso aviso--forte">
+        Os limites de desgaste, torque de aperto e número de reafiações não estão neste site.
+        Eles dependem do equipamento e do procedimento interno, e precisam ser definidos
+        pela Engenharia antes de este checklist virar padrão de campo.
       </p>
     </div>
-    <div>
-      <h3>Fábrica</h3>
-      <p>Loteamento Varandas Tropicais<br>Rua Araponga, 544, Qd 01 - Lote 31<br>Pitangueiras, Lauro de Freitas, BA<br>CEP 42701-330</p>
-    </div>
-    <div>
-      <h3>Atendimento</h3>
-      <p>Segunda a sexta, 7h às 17h<br>Em atividade desde 1991</p>
-      <p><a href="https://www.rodopar.net">rodopar.net</a></p>
+
+    <div class="painel">
+      <h3 class="painel__titulo">Sinais de campo</h3>
+      <p class="painel__ajuda">Ponto de partida para investigação. Não substitui análise de causa raiz.</p>
+      <div class="tabela-envolve">
+        <table class="tabela tabela--sinais">
+          <thead>
+            <tr><th scope="col">O que se observa</th><th scope="col">Causa provável</th><th scope="col">Primeira ação</th></tr>
+          </thead>
+          <tbody id="tabelaSinais"></tbody>
+        </table>
+      </div>
     </div>
   </div>
-  <div class="rodape__base">
-    <span>Projeto independente de demonstração, publicado no GitHub Pages.</span>
-    <span>Dados do catálogo público. Conferência humana obrigatória.</span>
+</section>
+
+<!-- ============================================================
+     GLOSSÁRIO
+     ============================================================ -->
+<section class="secao secao--claro" id="entender">
+  <div class="secao__cabeca">
+    <h2 class="secao__titulo">Como se perfura rocha</h2>
+    <p class="secao__intro">
+      Se você chegou aqui por curiosidade, comece por estes nove termos. Eles explicam
+      praticamente tudo que aparece no resto do site.
+    </p>
   </div>
+  <div class="glossario" id="glossario"></div>
+</section>
+
+<!-- ============================================================
+     SERVIÇOS
+     ============================================================ -->
+<section class="secao" id="servicos">
+  <div class="secao__cabeca">
+    <h2 class="secao__titulo">Além da linha de catálogo</h2>
+    <p class="secao__intro">
+      A mesma estrutura que produz ferramenta de perfuração atende peça especial
+      para os setores petrolífero, petroquímico, siderúrgico, naval, de alimentos
+      e bebidas e automotivo.
+    </p>
+  </div>
+  <div class="servicos" id="servicos-lista"></div>
+</section>
+
+<!-- ============================================================
+     ORÇAMENTO
+     ============================================================ -->
+<section class="secao secao--escuro" id="orcamento">
+  <div class="orcamento">
+    <div class="orcamento__texto">
+      <h2 class="secao__titulo">Pedir orçamento</h2>
+      <p class="secao__intro">
+        Preencha e escolha por onde enviar. O formulário monta a mensagem pronta:
+        nada é enviado sem a sua confirmação, e nenhum dado passa por este site.
+      </p>
+      <dl class="contato">
+        <dt>Telefone</dt><dd><a id="ctTel" href="#"></a></dd>
+        <dt>WhatsApp</dt><dd><a id="ctZap" href="#" target="_blank" rel="noopener"></a></dd>
+        <dt>E-mail</dt><dd><a id="ctMail" href="#"></a></dd>
+        <dt>Atendimento</dt><dd id="ctHorario"></dd>
+        <dt>Fábrica</dt><dd id="ctEndereco"></dd>
+      </dl>
+    </div>
+
+    <form class="form" id="formOrcamento" novalidate>
+      <div class="form__linha">
+        <label for="fNome">Seu nome</label>
+        <input id="fNome" name="nome" required>
+      </div>
+      <div class="form__linha">
+        <label for="fEmpresa">Empresa</label>
+        <input id="fEmpresa" name="empresa" required>
+      </div>
+      <div class="form__duplo">
+        <div class="form__linha">
+          <label for="fCidade">Cidade / UF</label>
+          <input id="fCidade" name="cidade">
+        </div>
+        <div class="form__linha">
+          <label for="fFone">Telefone</label>
+          <input id="fFone" name="fone" inputmode="tel">
+        </div>
+      </div>
+      <div class="form__duplo">
+        <div class="form__linha">
+          <label for="fProduto">Produto</label>
+          <select id="fProduto" name="produto"></select>
+        </div>
+        <div class="form__linha">
+          <label for="fRosca">Rosca / modelo</label>
+          <select id="fRosca" name="rosca"></select>
+        </div>
+      </div>
+      <div class="form__duplo">
+        <div class="form__linha">
+          <label for="fQtd">Quantidade</label>
+          <input id="fQtd" name="qtd" inputmode="numeric">
+        </div>
+        <div class="form__linha">
+          <label for="fEquip">Perfuratriz / martelo</label>
+          <input id="fEquip" name="equip" placeholder="ex.: COP 1838">
+        </div>
+      </div>
+      <div class="form__linha">
+        <label for="fObs">Aplicação e observações</label>
+        <textarea id="fObs" name="obs" rows="3" placeholder="tipo de rocha, diâmetro do furo, prazo"></textarea>
+      </div>
+
+      <p class="form__erro" id="formErro" hidden></p>
+
+      <div class="form__acoes">
+        <button class="botao botao--destaque" type="button" id="enviarZap">Enviar pelo WhatsApp</button>
+        <button class="botao botao--vazio" type="button" id="enviarMail">Enviar por e-mail</button>
+      </div>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="rodape">
+  <div class="rodape__interno">
+    <div>
+      <p class="rodape__marca">Rodopar</p>
+      <p class="rodape__linha" id="rpEndereco"></p>
+      <p class="rodape__linha" id="rpContato"></p>
+    </div>
+    <nav class="rodape__redes" aria-label="Redes sociais">
+      <a id="rpInsta" href="#" target="_blank" rel="noopener">Instagram</a>
+      <a id="rpLinked" href="#" target="_blank" rel="noopener">LinkedIn</a>
+      <a id="rpFace" href="#" target="_blank" rel="noopener">Facebook</a>
+      <a id="rpSite" href="#" target="_blank" rel="noopener">Site oficial</a>
+    </nav>
+  </div>
+  <p class="rodape__nota">
+    Página informativa construída a partir do conteúdo público de rodopar.net.
+    Dados técnicos, disponibilidade e prazos precisam de confirmação com o Comercial
+    antes de qualquer decisão de compra ou de operação.
+  </p>
 </footer>
 
-<script src="assets/dados.js"></script>
-<script src="assets/app.js"></script>
+<a class="zap-flutuante" id="zapFlutuante" href="#" target="_blank" rel="noopener">
+  <span aria-hidden="true">●</span> Falar no WhatsApp
+</a>
+
+<script>
+/* =============================================================
+   dados.js  —  FONTE ÚNICA DE DADOS DO SITE
+   -------------------------------------------------------------
+   Tudo que aparece no catálogo, na matriz de compatibilidade e
+   nos textos técnicos vem daqui. Para atualizar o site, edite
+   este arquivo — não é necessário mexer no HTML.
+
+   ORIGEM DOS DADOS: extraídos de www.rodopar.net (páginas
+   inicial, Produtos e Serviços) em 03/09/2026.
+
+   ATENÇÃO: campos marcados com  verificar: true  contêm
+   informação incompleta ou divergente no site atual e precisam
+   de confirmação da Engenharia / Comercial antes de publicar.
+   ============================================================= */
+
+const EMPRESA = {
+  nome: 'Rodopar',
+  fundacao: 1991,
+  cidade: 'Lauro de Freitas',
+  uf: 'BA',
+  endereco: 'Loteamento Varandas Tropicais, Rua Araponga, 544, Qd 01 - Lote 31, Pitangueiras',
+  cep: '42701-330',
+  telefone: '(71) 3379-1330',
+  telefoneLink: 'tel:+557133791330',
+  whatsapp: '(71) 99380-3830',
+  whatsappNumero: '5571993803830',
+  email: 'rodopar@rodopar.ind.br',
+  atendimento: 'Segunda a sexta, das 7h às 17h',
+  site: 'https://www.rodopar.net',
+  instagram: 'https://www.instagram.com/rodopar_mineracao/',
+  linkedin: 'https://www.linkedin.com/company/26267521/',
+  facebook: 'https://www.facebook.com/rodoparmineracao/',
+  catalogoGeral: 'https://www.rodopar.net/_files/ugd/9ebff8_ff04716c8c5d4511b81246e437a8393e.pdf',
+  catalogoProdutos: 'https://www.rodopar.net/_files/ugd/9ebff8_000efa4218034fa5868d34678dc86e66.pdf'
+};
+
+/* Roscas usadas como filtro. A ordem aqui é a ordem dos chips. */
+const ROSCAS = ['R25', 'R28', 'R32', 'R38', 'T38', 'T45', 'T51', 'ST58'];
+
+/* Métodos de perfuração — usados no diagrama da coluna e no filtro */
+const METODOS = {
+  tophammer: 'Top hammer',
+  conica: 'Perfuração cônica',
+  dth: 'Fundo de furo (DTH)'
+};
+
+/* =============================================================
+   FAMÍLIAS DE PRODUTO
+   -------------------------------------------------------------
+   id          -> usado nos links e filtros (não repetir)
+   nome        -> título do cartão
+   alias       -> nome comercial alternativo, entra na busca
+   metodo      -> um ou mais de METODOS
+   posicao     -> onde fica na coluna de perfuração
+   roscas      -> lista de roscas confirmadas no site
+   modelos     -> modelos/conicidades confirmados no site
+   funcao      -> o que a peça faz, em linguagem de campo
+   escolha     -> o que pesar na hora de especificar
+   verificar   -> true quando falta dado ou há divergência
+   pendencia   -> descreve o que precisa ser confirmado
+   ============================================================= */
+const FAMILIAS = [
+  {
+    id: 'bits-roscados',
+    nome: 'Bits roscados',
+    alias: 'button bit bits de botão',
+    icone: 'bit',
+    metodo: ['tophammer'],
+    posicao: 'Ponta da coluna',
+    roscas: ['R25', 'R28', 'R32', 'R38', 'T38', 'T45', 'T51', 'ST58'],
+    modelos: [],
+    funcao: 'Recebe o impacto transmitido pela haste e fragmenta a rocha pelos insertos de metal duro na face. É o item que define avanço, consumo e custo por metro perfurado.',
+    escolha: 'Diâmetro do furo, dureza e abrasividade da rocha, formato dos insertos e capacidade de sopro do equipamento.',
+    verificar: true,
+    pendencia: 'O site lista R38 no texto da página inicial, mas o cartão da página de produtos traz apenas R25, R28, R32, T38, T45, T51 e ST58. Confirmar a lista real de roscas e a faixa de diâmetros ofertada.'
+  },
+  {
+    id: 'bits-retracs',
+    nome: 'Bits retrac',
+    alias: 'retrac saia estriada',
+    icone: 'retrac',
+    metodo: ['tophammer'],
+    posicao: 'Ponta da coluna',
+    roscas: ['R32', 'R38', 'T38', 'T45', 'T51', 'ST58'],
+    modelos: [],
+    funcao: 'Bit com saia estriada, projetada para recuar a coluna em furo instável ou com desmoronamento. Reduz risco de prisão da ferramenta.',
+    escolha: 'Indicado em rocha fraturada, furo longo ou onde já houve histórico de coluna presa.',
+    verificar: false,
+    pendencia: ''
+  },
+  {
+    id: 'bits-alargadores',
+    nome: 'Bits alargadores',
+    alias: 'reaming bit alargador',
+    icone: 'alargador',
+    metodo: ['tophammer'],
+    posicao: 'Ponta da coluna',
+    roscas: ['R32', 'R38', 'T38', 'T45', 'T51', 'ST58'],
+    modelos: [],
+    funcao: 'Abre o furo já executado para um diâmetro maior, geralmente para alojar tubulação, ancoragem ou boca de furo de desmonte.',
+    escolha: 'Diâmetro final desejado e diâmetro do furo piloto existente.',
+    verificar: false,
+    pendencia: ''
+  },
+  {
+    id: 'cone-bits',
+    nome: 'Cone bits (taper bits)',
+    alias: 'bit cônico taperbit',
+    icone: 'conebit',
+    metodo: ['conica'],
+    posicao: 'Ponta da coluna',
+    roscas: [],
+    modelos: ['3 graus', '5,5 graus'],
+    funcao: 'Bit de encaixe cônico, sem rosca, usado com haste cônica sextavada em perfuratriz manual e serviços de pequeno diâmetro.',
+    escolha: 'A conicidade tem de ser a mesma da haste. Misturar 3° com 5,5° causa perda de energia e trava a montagem.',
+    verificar: false,
+    pendencia: ''
+  },
+  {
+    id: 'pilotos-coroas',
+    nome: 'Pilotos e coroas alargadoras',
+    alias: 'pilot adapter coroa',
+    icone: 'piloto',
+    metodo: ['tophammer'],
+    posicao: 'Ponta da coluna',
+    roscas: [],
+    modelos: [],
+    funcao: 'Conjunto piloto + coroa que guia o alargamento a partir do furo já perfurado, mantendo o alinhamento.',
+    escolha: 'Precisa casar com o diâmetro do furo piloto e com o alargador escolhido.',
+    verificar: true,
+    pendencia: 'O site apresenta a família sem especificar roscas, diâmetros ou modelos. Levantar a linha efetivamente produzida.'
+  },
+  {
+    id: 'bits-dth',
+    nome: 'Bits fundo de furo (DTH)',
+    alias: 'down the hole martelo de fundo',
+    icone: 'dth',
+    metodo: ['dth'],
+    posicao: 'Ponta da coluna',
+    roscas: [],
+    modelos: ['BR33', 'CIR90', 'MISSION', 'COP DHD'],
+    funcao: 'Trabalha acoplado ao martelo que desce dentro do furo. O impacto acontece junto à rocha, o que mantém a energia e a retilineidade em furo profundo.',
+    escolha: 'O modelo é definido pelo martelo em uso. O encaixe é específico de cada fabricante de martelo.',
+    verificar: true,
+    pendencia: 'O site grafa "Dow The Hole"; o termo correto é "Down The Hole". Confirmar também a lista completa de encaixes e diâmetros por modelo.'
+  },
+  {
+    id: 'punhos',
+    nome: 'Punhos (shanks)',
+    alias: 'shank adapter punho adaptador',
+    icone: 'punho',
+    metodo: ['tophammer', 'conica'],
+    posicao: 'Topo da coluna',
+    roscas: [],
+    modelos: ['COP131', 'COP1838', 'VL140', 'YH80', 'HLX1', 'HLX5', 'HL500', 'HL600', 'HL700'],
+    funcao: 'Primeira peça da coluna. Recebe a percussão e a rotação da perfuratriz e transmite para a haste. Item de desgaste crítico: falha de punho para a frente de serviço.',
+    escolha: 'Definido pelo modelo do martelo hidráulico da perfuratriz, não pela rocha.',
+    verificar: true,
+    pendencia: 'A página inicial e a página de produtos listam conjuntos diferentes de modelos (YH80 aparece só na página de produtos). Consolidar a lista.'
+  },
+  {
+    id: 'luvas',
+    nome: 'Luvas e adaptadores',
+    alias: 'coupling luva adaptador de rosca',
+    icone: 'luva',
+    metodo: ['tophammer'],
+    posicao: 'Emenda da coluna',
+    roscas: ['R25', 'R28', 'R32', 'R38', 'T38', 'T45', 'T51'],
+    modelos: ['Macho/Fêmea'],
+    funcao: 'Emenda hastes entre si e liga a haste ao punho. Adaptadores permitem unir roscas diferentes na mesma coluna.',
+    escolha: 'Rosca das duas pontas e comprimento. Luva alongada ou trincada compromete a transmissão de energia de toda a coluna.',
+    verificar: true,
+    pendencia: 'O site afirma "todas as roscas" na página inicial e lista roscas específicas na página de produtos. Definir a lista oficial.'
+  },
+  {
+    id: 'hastes',
+    nome: 'Hastes para perfuração',
+    alias: 'drill rod haste tubo',
+    icone: 'haste',
+    metodo: ['tophammer'],
+    posicao: 'Corpo da coluna',
+    roscas: ['R32', 'R38', 'T38', 'T45', 'T51'],
+    modelos: ['Macho/Macho', 'Macho/Fêmea'],
+    funcao: 'Conduz a onda de choque do punho até o bit e leva o ar ou a água de limpeza até o fundo do furo.',
+    escolha: 'Rosca, comprimento e configuração de ponta (M/M ou M/F) conforme o carrossel e o curso da perfuratriz.',
+    verificar: true,
+    pendencia: 'Comprimentos disponíveis não constam no site. Levantar a grade padrão de fabricação.'
+  },
+  {
+    id: 'hastes-conicas',
+    nome: 'Hastes cônicas sextavadas',
+    alias: 'haste sextavada taper rod',
+    icone: 'hasteconica',
+    metodo: ['conica'],
+    posicao: 'Corpo da coluna',
+    roscas: [],
+    modelos: ['3 graus', '5,5 graus'],
+    funcao: 'Haste de corpo sextavado com ponta cônica, para trabalhar com cone bit em perfuratriz manual.',
+    escolha: 'Conicidade igual à do bit e comprimento conforme a profundidade de trabalho.',
+    verificar: true,
+    pendencia: 'Comprimentos e bitolas do sextavado não constam no site.'
+  }
+];
+
+/* =============================================================
+   SERVIÇOS  (página Serviços do site)
+   ============================================================= */
+const SERVICOS = [
+  {
+    nome: 'Usinagem de alta precisão',
+    detalhe: 'Especialidade em peças de HP (alta pressão) e SHP (super alta pressão).',
+    itens: []
+  },
+  {
+    nome: 'Peças especiais sob medida',
+    detalhe: 'Fabricação a partir de desenho, amostra ou croqui, com apoio no desenvolvimento do projeto.',
+    itens: []
+  },
+  {
+    nome: 'Tratamento térmico',
+    detalhe: 'Fornos de atmosfera controlada com capacidade para peças de até 3,5 metros.',
+    itens: ['Têmpera e revenimento', 'Cementação', 'Normalização', 'Alívio de tensões']
+  }
+];
+
+/* =============================================================
+   CHECKLIST DE INSPEÇÃO DE FERRAMENTA
+   -------------------------------------------------------------
+   Critérios QUALITATIVOS de propósito. Limites numéricos de
+   desgaste, torque e número de reafiações dependem do
+   equipamento e do procedimento interno — devem ser preenchidos
+   pela Engenharia antes de o checklist virar padrão de campo.
+   ============================================================= */
+const CHECKLIST = [
+  { grupo: 'Bit', item: 'Insertos de metal duro sem quebra, lasca ou perda' },
+  { grupo: 'Bit', item: 'Face sem achatamento excessivo dos insertos (bit "cego")' },
+  { grupo: 'Bit', item: 'Orifícios de sopro e canais de limpeza desobstruídos' },
+  { grupo: 'Bit', item: 'Sem coloração de superaquecimento na região dos insertos' },
+  { grupo: 'Bit', item: 'Desgaste de diâmetro e de saia dentro do limite do procedimento' },
+  { grupo: 'Haste', item: 'Corpo sem empenamento visível e sem redução de seção' },
+  { grupo: 'Haste', item: 'Roscas limpas, sem rebarba, amassamento ou início de trinca' },
+  { grupo: 'Haste', item: 'Rosca lubrificada com graxa específica antes da montagem' },
+  { grupo: 'Luva', item: 'Sem trinca longitudinal e sem alongamento das roscas' },
+  { grupo: 'Punho', item: 'Estriado sem desgaste que gere folga no mandril' },
+  { grupo: 'Punho', item: 'Face de impacto sem escoamento de material nem trinca' },
+  { grupo: 'Coluna', item: 'Torque de aperto conforme o manual da perfuratriz' },
+  { grupo: 'Registro', item: 'Metragem e número de reafiações lançados no controle da ferramenta' }
+];
+
+/* =============================================================
+   SINAIS DE CAMPO
+   -------------------------------------------------------------
+   Modos de falha típicos de perfuração rotopercussiva. Serve
+   como ponto de partida para investigação — não substitui
+   análise de causa raiz nem o manual do equipamento.
+   ============================================================= */
+const SINAIS = [
+  {
+    sintoma: 'Queda de taxa de penetração com bit aparentemente inteiro',
+    causa: 'Insertos achatados, pressão de percussão baixa ou limpeza de furo insuficiente',
+    acao: 'Avaliar reafiação, conferir parâmetros da perfuratriz e a vazão de ar'
+  },
+  {
+    sintoma: 'Insertos quebrados ou arrancados',
+    causa: 'Rocha fraturada, rotação alta demais para a percussão ou bit já cego forçado em serviço',
+    acao: 'Retirar de operação, revisar parâmetros e a política de troca por metragem'
+  },
+  {
+    sintoma: 'Rosca do bit ou da haste com escoamento de material',
+    causa: 'Aperto fora do torque, falta de graxa de rosca ou luva desgastada',
+    acao: 'Revisar procedimento de montagem e substituir a luva do conjunto'
+  },
+  {
+    sintoma: 'Desgaste acentuado do diâmetro do bit em poucos metros',
+    causa: 'Rocha muito abrasiva ou limpeza deficiente devolvendo cascalho para a face',
+    acao: 'Reavaliar a linha de bit especificada e a capacidade de sopro'
+  },
+  {
+    sintoma: 'Trinca ou ruptura de haste no primeiro terço do corpo',
+    causa: 'Coluna desalinhada, furo tortuoso ou percussão sem contato firme com a rocha',
+    acao: 'Verificar alinhamento da lança e a técnica de início de furo (emboque)'
+  },
+  {
+    sintoma: 'Coluna presa no furo',
+    causa: 'Desmoronamento da parede, limpeza insuficiente ou acúmulo de finos',
+    acao: 'Avaliar migração para bit retrac e revisar a limpeza durante o avanço'
+  },
+  {
+    sintoma: 'Punho com vida muito abaixo da média',
+    causa: 'Folga no mandril, lubrificação do martelo deficiente ou modelo incorreto',
+    acao: 'Inspecionar o martelo hidráulico antes de trocar o fornecedor da peça'
+  }
+];
+
+/* =============================================================
+   GLOSSÁRIO
+   ============================================================= */
+const GLOSSARIO = [
+  {
+    termo: 'Perfuração rotopercussiva',
+    texto: 'Método que combina impacto e rotação: a energia de percussão quebra a rocha e a rotação reposiciona os insertos para o golpe seguinte. É a base tanto do top hammer quanto do fundo de furo.'
+  },
+  {
+    termo: 'Top hammer',
+    texto: 'O martelo fica fora do furo, na perfuratriz, e a energia viaja pela coluna de hastes até o bit. Montagem mais simples e produtiva em furos curtos e médios.'
+  },
+  {
+    termo: 'Fundo de furo (DTH)',
+    texto: 'O martelo desce dentro do furo, imediatamente acima do bit. Como a energia não percorre a coluna, mantém desempenho e retilineidade em furos profundos.'
+  },
+  {
+    termo: 'Inserto (botão) de metal duro',
+    texto: 'Pastilha de carbeto de tungstênio prensada na face do bit. É o que realmente corta a rocha; o aço do bit apenas sustenta e posiciona os insertos.'
+  },
+  {
+    termo: 'Rosca R e T',
+    texto: 'Padrões de rosca de conexão da coluna. R (rope thread) e T (trapezoidal) diferem em passo e perfil; o número indica a bitola nominal, como R32 ou T45. Roscas de padrões diferentes não se conectam sem adaptador.'
+  },
+  {
+    termo: 'Retrac',
+    texto: 'Bit com saia estriada que facilita o recuo da coluna em furo instável, reduzindo o risco de prisão da ferramenta.'
+  },
+  {
+    termo: 'Reafiação',
+    texto: 'Reperfilamento dos insertos com rebolo diamantado quando o bit perde eficiência. Recupera taxa de penetração e estende a vida útil, dentro de um número limitado de ciclos.'
+  },
+  {
+    termo: 'Sobrefuro e alargamento',
+    texto: 'Abertura do furo para um diâmetro maior que o original, feita com alargador e conjunto piloto, normalmente para alojar tubulação ou ancoragem.'
+  },
+  {
+    termo: 'Limpeza do furo',
+    texto: 'Ar ou água bombeados pela coluna para retirar o cascalho. Limpeza insuficiente faz o material triturar novamente na face do bit, derrubando a produtividade e acelerando o desgaste.'
+  }
+];
+
+/* =============================================================
+   app.js — comportamento do site
+   Depende de dados.js (EMPRESA, ROSCAS, METODOS, FAMILIAS,
+   SERVICOS, CHECKLIST, SINAIS, GLOSSARIO).
+   Sem bibliotecas externas. Roda em GitHub Pages sem servidor.
+   ============================================================= */
+(function () {
+  'use strict';
+
+  const $ = (s, ctx) => (ctx || document).querySelector(s);
+  const $$ = (s, ctx) => Array.from((ctx || document).querySelectorAll(s));
+  const porId = (id) => FAMILIAS.find((f) => f.id === id);
+
+  /* ----------------------------------------------------------
+     Ícones técnicos (desenho vetorial próprio, sem imagens
+     externas — troque por fotos reais se quiser, ver README)
+     ---------------------------------------------------------- */
+  const ICONES = {
+    bit: `<path class="traco" d="M14 10h20v14c0 6-4 10-10 10s-10-4-10-10z"/>
+          <circle class="cheio" cx="19" cy="29" r="2.4"/><circle class="cheio" cx="24" cy="32" r="2.4"/>
+          <circle class="cheio" cx="29" cy="29" r="2.4"/>
+          <path class="traco" d="M17 10V6h14v4"/>`,
+    retrac: `<path class="traco" d="M14 10h20v14c0 6-4 10-10 10s-10-4-10-10z"/>
+             <path class="traco" d="M18 12v12M24 12v10M30 12v12"/>
+             <circle class="cheio" cx="24" cy="32" r="2.4"/>
+             <path class="traco" d="M17 10V6h14v4"/>`,
+    alargador: `<path class="traco" d="M8 14h32v10c0 6-6 10-16 10S8 30 8 24z"/>
+                <circle class="cheio" cx="14" cy="27" r="2.2"/><circle class="cheio" cx="24" cy="31" r="2.2"/>
+                <circle class="cheio" cx="34" cy="27" r="2.2"/>
+                <path class="traco" d="M19 14V5h10v9"/>`,
+    conebit: `<path class="traco" d="M16 8h16l4 18c0 5-5 8-12 8s-12-3-12-8z"/>
+              <circle class="cheio" cx="20" cy="29" r="2.3"/><circle class="cheio" cx="28" cy="29" r="2.3"/>`,
+    piloto: `<path class="traco" d="M10 12h28v8c0 5-6 8-14 8s-14-3-14-8z"/>
+             <path class="traco" d="M20 28h8v12l-4 4-4-4z"/>
+             <circle class="cheio" cx="24" cy="36" r="2"/>`,
+    dth: `<path class="traco" d="M14 6h20v20c0 6-4 10-10 10s-10-4-10-10z"/>
+          <path class="traco" d="M14 14h20"/>
+          <circle class="cheio" cx="19" cy="30" r="2.3"/><circle class="cheio" cx="29" cy="30" r="2.3"/>
+          <circle class="cheio" cx="24" cy="33" r="2.3"/>`,
+    punho: `<path class="traco" d="M17 4h14v36H17z"/>
+            <path class="traco" d="M19 12h10M19 18h10M19 24h10M19 30h10"/>`,
+    luva: `<path class="traco" d="M12 14h24v20H12z"/>
+           <path class="traco" d="M16 19h16M16 24h16M16 29h16"/>
+           <path class="traco" d="M20 14V8M28 14V8M20 40v-6M28 40v-6"/>`,
+    haste: `<path class="traco" d="M20 4h8v40h-8z"/>
+            <path class="traco" d="M20 10h8M20 38h8"/>
+            <path class="traco" d="M24 14v20"/>`,
+    hasteconica: `<path class="traco" d="M18 4h12v28l-6 10-6-10z"/>
+                  <path class="traco" d="M22 6v26M26 6v26"/>`
+  };
+
+  const icone = (chave) =>
+    `<svg viewBox="0 0 48 48" aria-hidden="true">${ICONES[chave] || ICONES.bit}</svg>`;
+
+  /* ----------------------------------------------------------
+     Peças do diagrama que NÃO são fabricadas pela Rodopar
+     ---------------------------------------------------------- */
+  const PECAS_EQUIPAMENTO = {
+    tubo: {
+      nome: 'Tubo de perfuração',
+      posicao: 'Corpo da coluna',
+      funcao: 'Conduz o ar comprimido até o martelo de fundo e transmite a rotação. Faz parte do equipamento de perfuração.',
+      externa: true
+    },
+    martelo: {
+      nome: 'Martelo de fundo',
+      posicao: 'Acima do bit, dentro do furo',
+      funcao: 'Gera o impacto junto à rocha. É o martelo que define qual encaixe de bit DTH você precisa. Faz parte do equipamento de perfuração.',
+      externa: true
+    }
+  };
+
+  /* ==========================================================
+     1. DIAGRAMA INTERATIVO DA COLUNA
+     ========================================================== */
+  const svg = $('#colunaSvg');
+  const painelPeca = $('#pecaInfo');
+
+  function mostrarPeca(chave) {
+    const equip = PECAS_EQUIPAMENTO[chave];
+    const fam = porId(chave);
+
+    if (equip) {
+      painelPeca.innerHTML = `
+        <p class="peca-info__papel">${equip.posicao} — item do equipamento</p>
+        <h3>${equip.nome}</h3>
+        <p>${equip.funcao}</p>
+        <p class="peca-info__papel">A Rodopar fornece o bit que se acopla a este conjunto.</p>
+        <a class="peca-info__acao" href="#catalogo" data-ir="bits-dth">Ver bits fundo de furo</a>`;
+      return;
+    }
+    if (!fam) return;
+
+    const etiquetas = fam.roscas.concat(fam.modelos);
+    painelPeca.innerHTML = `
+      <p class="peca-info__papel">${fam.posicao}</p>
+      <h3>${fam.nome}</h3>
+      <p>${fam.funcao}</p>
+      ${etiquetas.length
+        ? `<ul class="peca-info__lista">${etiquetas.map((e) => `<li>${e}</li>`).join('')}</ul>`
+        : ''}
+      <a class="peca-info__acao" href="#catalogo" data-ir="${fam.id}">Ver no catálogo</a>`;
+  }
+
+  function ativarPeca(g) {
+    $$('.peca', svg).forEach((p) => p.removeAttribute('data-ativa'));
+    g.setAttribute('data-ativa', 'true');
+    mostrarPeca(g.dataset.peca);
+  }
+
+  $$('.peca', svg).forEach((g) => {
+    g.addEventListener('click', () => ativarPeca(g));
+    g.addEventListener('keydown', (ev) => {
+      if (ev.key === 'Enter' || ev.key === ' ') {
+        ev.preventDefault();
+        ativarPeca(g);
+      }
+    });
+  });
+
+  $$('.metodo__opcao').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      $$('.metodo__opcao').forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+      $$('.conjunto', svg).forEach((c) => {
+        c.hidden = c.dataset.conjunto !== btn.dataset.metodo;
+      });
+      $$('.peca', svg).forEach((p) => p.removeAttribute('data-ativa'));
+      painelPeca.innerHTML =
+        '<p class="peca-info__vazio">Nenhuma peça selecionada. Toque em um componente da coluna.</p>';
+      // pré-seleciona o filtro do catálogo pelo método escolhido
+      metodosSelecionados = new Set([btn.dataset.metodo]);
+      sincronizarChips();
+      desenharCatalogo();
+    });
+  });
+
+  /* ==========================================================
+     2. CATÁLOGO E FILTROS
+     ========================================================== */
+  let roscasSelecionadas = new Set();
+  let metodosSelecionados = new Set();
+
+  function criarChip(texto, valor, conjunto, aoMudar) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip';
+    b.textContent = texto;
+    b.dataset.valor = valor;
+    b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', () => {
+      if (conjunto.has(valor)) conjunto.delete(valor);
+      else conjunto.add(valor);
+      sincronizarChips();
+      aoMudar();
+    });
+    return b;
+  }
+
+  function sincronizarChips() {
+    $$('#chipsRosca .chip').forEach((c) =>
+      c.setAttribute('aria-pressed', String(roscasSelecionadas.has(c.dataset.valor)))
+    );
+    $$('#chipsMetodo .chip').forEach((c) =>
+      c.setAttribute('aria-pressed', String(metodosSelecionados.has(c.dataset.valor)))
+    );
+  }
+
+  const chipsRosca = $('#chipsRosca');
+  ROSCAS.forEach((r) =>
+    chipsRosca.appendChild(criarChip(r, r, roscasSelecionadas, desenharCatalogo))
+  );
+
+  const chipsMetodo = $('#chipsMetodo');
+  Object.keys(METODOS).forEach((k) =>
+    chipsMetodo.appendChild(criarChip(METODOS[k], k, metodosSelecionados, desenharCatalogo))
+  );
+
+  const campoBusca = $('#busca');
+  campoBusca.addEventListener('input', desenharCatalogo);
+
+  $('#limparFiltros').addEventListener('click', () => {
+    roscasSelecionadas.clear();
+    metodosSelecionados.clear();
+    campoBusca.value = '';
+    sincronizarChips();
+    desenharCatalogo();
+  });
+
+  function filtrar() {
+    const termo = campoBusca.value.trim().toLowerCase();
+    return FAMILIAS.filter((f) => {
+      if (roscasSelecionadas.size) {
+        const bate = f.roscas.some((r) => roscasSelecionadas.has(r));
+        if (!bate) return false;
+      }
+      if (metodosSelecionados.size) {
+        const bate = f.metodo.some((m) => metodosSelecionados.has(m));
+        if (!bate) return false;
+      }
+      if (termo) {
+        const alvo = [f.nome, f.alias, f.funcao, f.posicao]
+          .concat(f.roscas, f.modelos)
+          .join(' ')
+          .toLowerCase();
+        if (!alvo.includes(termo)) return false;
+      }
+      return true;
+    });
+  }
+
+  function cartaoHTML(f) {
+    const roscasHTML = f.roscas.length
+      ? `<dt>Roscas</dt><dd>${f.roscas.map((r) => `<span class="cod">${r}</span>`).join('')}</dd>`
+      : '';
+    const modelosHTML = f.modelos.length
+      ? `<dt>Modelos</dt><dd>${f.modelos.map((m) => `<span class="cod">${m}</span>`).join('')}</dd>`
+      : '';
+    const semDado =
+      !f.roscas.length && !f.modelos.length
+        ? '<dt>Especificação</dt><dd><span class="cod">sob consulta</span></dd>'
+        : '';
+
+    return `
+      <article class="cartao" id="fam-${f.id}">
+        <div class="cartao__topo">
+          <div class="cartao__icone">${icone(f.icone)}</div>
+          <div>
+            <h3 class="cartao__nome">${f.nome}</h3>
+            <p class="cartao__posicao">${f.posicao} — ${f.metodo.map((m) => METODOS[m]).join(', ')}</p>
+          </div>
+        </div>
+        <p class="cartao__funcao">${f.funcao}</p>
+        <dl class="cartao__dados">${roscasHTML}${modelosHTML}${semDado}</dl>
+        <details class="cartao__detalhe">
+          <summary>Como especificar</summary>
+          <p>${f.escolha}</p>
+          ${f.verificar ? `<span class="selo-verificar"><strong>Confirmar antes de publicar:</strong> ${f.pendencia}</span>` : ''}
+        </details>
+        <a class="cartao__cta" href="#orcamento" data-produto="${f.id}">Pedir orçamento desta família</a>
+      </article>`;
+  }
+
+  const grade = $('#grade');
+  const contagem = $('#contagem');
+
+  function desenharCatalogo() {
+    const lista = filtrar();
+    contagem.textContent =
+      lista.length === FAMILIAS.length
+        ? `${FAMILIAS.length} famílias de produto`
+        : `${lista.length} de ${FAMILIAS.length} famílias atendem ao filtro`;
+
+    grade.innerHTML = lista.length
+      ? lista.map(cartaoHTML).join('')
+      : `<div class="vazio">
+           <p>Nenhuma família com essa combinação de rosca e método.</p>
+           <p>Roscas fora da lista e peças especiais são feitas sob desenho — fale com o Comercial.</p>
+         </div>`;
+
+    // botão "pedir orçamento" de cada cartão pré-seleciona o produto
+    $$('.cartao__cta', grade).forEach((a) => {
+      a.addEventListener('click', () => {
+        $('#fProduto').value = a.dataset.produto;
+        atualizarRoscasForm();
+      });
+    });
+  }
+
+  /* ==========================================================
+     3. COMPATIBILIDADE POR ROSCA
+     ========================================================== */
+  const chipsSeletor = $('#chipsSeletor');
+  const resultadoRosca = $('#resultadoRosca');
+  let roscaEscolhida = null;
+
+  function desenharResultadoRosca() {
+    if (!roscaEscolhida) {
+      resultadoRosca.innerHTML =
+        '<p class="resultado-rosca__nada">Escolha uma rosca acima para ver o conjunto disponível.</p>';
+      return;
+    }
+    const compativeis = FAMILIAS.filter((f) => f.roscas.includes(roscaEscolhida));
+    const faltantes = ['punhos', 'hastes', 'luvas', 'bits-roscados']
+      .map(porId)
+      .filter((f) => f && !f.roscas.includes(roscaEscolhida));
+
+    resultadoRosca.innerHTML = `
+      <div class="resultado-rosca__caixa">
+        <h3>Coluna em ${roscaEscolhida}</h3>
+        ${compativeis.length
+          ? `<ul>${compativeis
+              .map(
+                (f) =>
+                  `<li><a href="#fam-${f.id}">${f.nome}</a> — ${f.posicao.toLowerCase()}</li>`
+              )
+              .join('')}</ul>`
+          : '<p class="resultado-rosca__nada">Nenhuma família publicada nesta rosca.</p>'}
+        ${faltantes.length
+          ? `<p class="aviso">Não consta nesta rosca na informação pública: ${faltantes
+              .map((f) => f.nome.toLowerCase())
+              .join(', ')}. O punho é definido pelo martelo da perfuratriz, não pela rosca da coluna.</p>`
+          : ''}
+      </div>`;
+  }
+
+  ROSCAS.forEach((r) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'chip';
+    b.textContent = r;
+    b.dataset.valor = r;
+    b.setAttribute('aria-pressed', 'false');
+    b.addEventListener('click', () => {
+      roscaEscolhida = roscaEscolhida === r ? null : r;
+      $$('.chip', chipsSeletor).forEach((c) =>
+        c.setAttribute('aria-pressed', String(c.dataset.valor === roscaEscolhida))
+      );
+      desenharResultadoRosca();
+    });
+    chipsSeletor.appendChild(b);
+  });
+  desenharResultadoRosca();
+
+  /* matriz família x rosca — só famílias com rosca definida */
+  const comRosca = FAMILIAS.filter((f) => f.roscas.length);
+  $('#tabelaCabeca').innerHTML =
+    '<th scope="col">Família</th>' + ROSCAS.map((r) => `<th scope="col">${r}</th>`).join('');
+  $('#tabelaCorpo').innerHTML = comRosca
+    .map(
+      (f) =>
+        `<tr><th scope="row">${f.nome}</th>` +
+        ROSCAS.map((r) =>
+          f.roscas.includes(r)
+            ? '<td data-tem="1"><span class="marca-sim" aria-hidden="true">●</span><span class="oculto-visual"> sim</span></td>'
+            : '<td data-tem="0">—</td>'
+        ).join('') +
+        '</tr>'
+    )
+    .join('');
+
+  /* ==========================================================
+     4. CHECKLIST DE INSPEÇÃO
+     ========================================================== */
+  const alvoChecklist = $('#checklist');
+  const grupos = [];
+  CHECKLIST.forEach((c) => {
+    let g = grupos.find((x) => x.nome === c.grupo);
+    if (!g) grupos.push((g = { nome: c.grupo, itens: [] }));
+    g.itens.push(c.item);
+  });
+
+  alvoChecklist.innerHTML = grupos
+    .map(
+      (g, gi) => `
+      <div class="checklist__grupo">
+        <h4>${g.nome}</h4>
+        ${g.itens
+          .map(
+            (item, ii) => `
+          <label class="checklist__item">
+            <input type="checkbox" data-grupo="${g.nome}" data-item="${gi}-${ii}">
+            <span>${item}</span>
+          </label>`
+          )
+          .join('')}
+      </div>`
+    )
+    .join('');
+
+  const caixas = $$('#checklist input');
+  const barra = $('#progressoPreenchida');
+  const textoProgresso = $('#progressoTexto');
+
+  function atualizarProgresso() {
+    const feitos = caixas.filter((c) => c.checked).length;
+    barra.style.width = (feitos / caixas.length) * 100 + '%';
+    textoProgresso.textContent = `${feitos} de ${caixas.length} itens verificados`;
+  }
+  caixas.forEach((c) => c.addEventListener('change', atualizarProgresso));
+  atualizarProgresso();
+
+  $('#zerarChecklist').addEventListener('click', () => {
+    caixas.forEach((c) => (c.checked = false));
+    atualizarProgresso();
+    $('#resumoInspecao').hidden = true;
+  });
+
+  $('#gerarResumo').addEventListener('click', () => {
+    const agora = new Date();
+    const data = agora.toLocaleDateString('pt-BR');
+    const hora = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+    const pendentes = caixas
+      .filter((c) => !c.checked)
+      .map((c) => `  [ ] ${c.nextElementSibling.textContent.trim()}`);
+    const linhas = [
+      `INSPEÇÃO DE FERRAMENTA — ${data} ${hora}`,
+      `Verificados: ${caixas.length - pendentes.length}/${caixas.length}`,
+      '',
+      pendentes.length ? 'PENDENTES:' : 'Nenhum item pendente.',
+      ...pendentes,
+      '',
+      'Limites de desgaste, torque e reafiação conforme procedimento interno.',
+      'Operador: ______________   Equipamento: ______________'
+    ];
+    const pre = $('#resumoInspecao');
+    pre.textContent = linhas.join('\n');
+    pre.hidden = false;
+  });
+
+  /* ==========================================================
+     5. SINAIS DE CAMPO / GLOSSÁRIO / SERVIÇOS
+     ========================================================== */
+  $('#tabelaSinais').innerHTML = SINAIS.map(
+    (s) => `<tr><td>${s.sintoma}</td><td>${s.causa}</td><td>${s.acao}</td></tr>`
+  ).join('');
+
+  $('#glossario').innerHTML = GLOSSARIO.map(
+    (g) => `<details class="termo"><summary>${g.termo}</summary><p>${g.texto}</p></details>`
+  ).join('');
+
+  $('#servicos-lista').innerHTML = SERVICOS.map(
+    (s) => `
+    <article class="servico">
+      <h3>${s.nome}</h3>
+      <p>${s.detalhe}</p>
+      ${s.itens.length ? `<ul>${s.itens.map((i) => `<li>${i}</li>`).join('')}</ul>` : ''}
+    </article>`
+  ).join('');
+
+  /* ==========================================================
+     6. CONTATO E FORMULÁRIO
+     ========================================================== */
+  const zapBase = 'https://wa.me/' + EMPRESA.whatsappNumero;
+
+  $('#ctTel').textContent = EMPRESA.telefone;
+  $('#ctTel').href = EMPRESA.telefoneLink;
+  $('#ctZap').textContent = EMPRESA.whatsapp;
+  $('#ctZap').href = zapBase;
+  $('#ctMail').textContent = EMPRESA.email;
+  $('#ctMail').href = 'mailto:' + EMPRESA.email;
+  $('#ctHorario').textContent = EMPRESA.atendimento;
+  $('#ctEndereco').textContent = `${EMPRESA.endereco} — ${EMPRESA.cidade}/${EMPRESA.uf}, CEP ${EMPRESA.cep}`;
+
+  $('#rpEndereco').textContent = `${EMPRESA.endereco}, ${EMPRESA.cidade}/${EMPRESA.uf} — CEP ${EMPRESA.cep}`;
+  $('#rpContato').textContent = `${EMPRESA.telefone} · ${EMPRESA.email} · ${EMPRESA.atendimento} · desde ${EMPRESA.fundacao}`;
+  $('#rpInsta').href = EMPRESA.instagram;
+  $('#rpLinked').href = EMPRESA.linkedin;
+  $('#rpFace').href = EMPRESA.facebook;
+  $('#rpSite').href = EMPRESA.site;
+  $('#zapFlutuante').href = zapBase;
+  $('#linkCatalogo').href = EMPRESA.catalogoProdutos;
+
+  const selProduto = $('#fProduto');
+  selProduto.innerHTML =
+    FAMILIAS.map((f) => `<option value="${f.id}">${f.nome}</option>`).join('') +
+    '<option value="especial">Peça especial / usinagem</option>' +
+    '<option value="termico">Tratamento térmico</option>';
+
+  const selRosca = $('#fRosca');
+  function atualizarRoscasForm() {
+    const f = porId(selProduto.value);
+    const opcoes = f ? f.roscas.concat(f.modelos) : [];
+    selRosca.innerHTML =
+      '<option value="">A definir</option>' +
+      opcoes.map((o) => `<option value="${o}">${o}</option>`).join('');
+  }
+  selProduto.addEventListener('change', atualizarRoscasForm);
+  atualizarRoscasForm();
+
+  function montarMensagem() {
+    const v = (id) => $(id).value.trim();
+    const nome = v('#fNome');
+    const empresa = v('#fEmpresa');
+    const erro = $('#formErro');
+
+    $('#fNome').setAttribute('aria-invalid', String(!nome));
+    $('#fEmpresa').setAttribute('aria-invalid', String(!empresa));
+
+    if (!nome || !empresa) {
+      erro.textContent = 'Informe seu nome e a empresa para que o Comercial possa responder.';
+      erro.hidden = false;
+      (nome ? $('#fEmpresa') : $('#fNome')).focus();
+      return null;
+    }
+    erro.hidden = true;
+
+    const rotuloProduto =
+      selProduto.selectedOptions[0] ? selProduto.selectedOptions[0].textContent : '';
+
+    const linhas = [
+      'Pedido de orçamento — Rodopar',
+      `Nome: ${nome}`,
+      `Empresa: ${empresa}`,
+      v('#fCidade') ? `Cidade/UF: ${v('#fCidade')}` : null,
+      v('#fFone') ? `Telefone: ${v('#fFone')}` : null,
+      `Produto: ${rotuloProduto}`,
+      selRosca.value ? `Rosca/modelo: ${selRosca.value}` : 'Rosca/modelo: a definir',
+      v('#fQtd') ? `Quantidade: ${v('#fQtd')}` : null,
+      v('#fEquip') ? `Perfuratriz/martelo: ${v('#fEquip')}` : null,
+      v('#fObs') ? `Observações: ${v('#fObs')}` : null
+    ].filter(Boolean);
+
+    return linhas.join('\n');
+  }
+
+  $('#enviarZap').addEventListener('click', () => {
+    const msg = montarMensagem();
+    if (!msg) return;
+    window.open(zapBase + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+  });
+
+  $('#enviarMail').addEventListener('click', () => {
+    const msg = montarMensagem();
+    if (!msg) return;
+    window.location.href =
+      'mailto:' +
+      EMPRESA.email +
+      '?subject=' +
+      encodeURIComponent('Pedido de orçamento pelo site') +
+      '&body=' +
+      encodeURIComponent(msg);
+  });
+
+  /* ==========================================================
+     7. MENU MOBILE + ATALHOS
+     ========================================================== */
+  const menuBotao = $('#menuBotao');
+  const nav = $('#navPrincipal');
+  menuBotao.addEventListener('click', () => {
+    const aberta = nav.classList.toggle('nav--aberta');
+    menuBotao.setAttribute('aria-expanded', String(aberta));
+  });
+  $$('#navPrincipal a').forEach((a) =>
+    a.addEventListener('click', () => {
+      nav.classList.remove('nav--aberta');
+      menuBotao.setAttribute('aria-expanded', 'false');
+    })
+  );
+
+  /* links "Ver no catálogo" saindo do diagrama filtram a família */
+  document.addEventListener('click', (ev) => {
+    const alvo = ev.target.closest('[data-ir]');
+    if (!alvo) return;
+    const f = porId(alvo.dataset.ir);
+    if (!f) return;
+    roscasSelecionadas.clear();
+    metodosSelecionados.clear();
+    campoBusca.value = f.nome;
+    sincronizarChips();
+    desenharCatalogo();
+  });
+
+  desenharCatalogo();
+})();
+
+</script>
 </body>
 </html>
