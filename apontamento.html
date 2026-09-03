@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Apontamento de Perfuração</title>
+<meta name="theme-color" content="#0f1519">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icone.svg">
+<style>
+/* ==========================================================
+   Apontamento de Perfuração — interface para uso subterrâneo
+   Alto contraste, alvos grandes (uso com luva), teclado
+   numérico onde couber, fontes do sistema (funciona offline).
+   ========================================================== */
+:root{
+  --fundo:#0f1519; --caixa:#18232a; --caixa2:#22303a;
+  --linha:#33454f; --texto:#e8e9e6; --fraco:#8a9aa3;
+  --sinal:#f2c11b; --ok:#3f9d64; --alerta:#c8552f;
+  --raio:6px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:rgba(242,193,27,.2)}
+html,body{margin:0}
+body{
+  background:var(--fundo);color:var(--texto);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:17px;line-height:1.5;padding-bottom:80px;
+}
+h1,h2,h3{margin:0;line-height:1.15}
+button,input,select,textarea{font:inherit}
+:focus-visible{outline:3px solid var(--sinal);outline-offset:2px}
+
+/* ---------- barra de estado ---------- */
+.barra{
+  position:sticky;top:0;z-index:20;background:var(--caixa);
+  border-bottom:1px solid var(--linha);padding:.7rem .9rem;
+}
+.barra__topo{display:flex;align-items:center;gap:.6rem}
+.barra__titulo{font-size:1.05rem;font-weight:700;margin-right:auto}
+.conexao{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-size:.78rem;font-weight:600;padding:.3rem .6rem;border-radius:999px;
+  border:1px solid var(--linha);white-space:nowrap;
+}
+.conexao__ponto{width:9px;height:9px;border-radius:50%;background:var(--fraco)}
+.conexao[data-estado="online"]{border-color:var(--ok);color:#9fdcb5}
+.conexao[data-estado="online"] .conexao__ponto{background:var(--ok)}
+.conexao[data-estado="offline"]{border-color:var(--alerta);color:#f0a98d}
+.conexao[data-estado="offline"] .conexao__ponto{background:var(--alerta)}
+.barra__turno{font-size:.8rem;color:var(--fraco);margin-top:.35rem}
+
+/* ---------- abas ---------- */
+.abas{display:flex;background:var(--caixa);border-bottom:1px solid var(--linha);position:sticky;top:0;z-index:19}
+.aba{
+  flex:1;background:none;border:none;color:var(--fraco);
+  padding:.85rem .2rem;font-size:.82rem;font-weight:600;cursor:pointer;
+  border-bottom:3px solid transparent;
+}
+.aba[aria-selected="true"]{color:var(--texto);border-bottom-color:var(--sinal)}
+
+.tela{display:none;padding:1rem .9rem 2rem}
+.tela[data-ativa="true"]{display:block}
+
+/* ---------- formulário ---------- */
+.bloco{background:var(--caixa);border:1px solid var(--linha);border-radius:var(--raio);padding:1rem;margin-bottom:1rem}
+.bloco__titulo{font-size:.95rem;font-weight:700;margin-bottom:.8rem;color:var(--sinal)}
+.campo{margin-bottom:.9rem}
+.campo:last-child{margin-bottom:0}
+.campo label{display:block;font-size:.8rem;color:var(--fraco);margin-bottom:.3rem;font-weight:600}
+.campo input,.campo select,.campo textarea{
+  width:100%;background:var(--caixa2);color:var(--texto);
+  border:1px solid var(--linha);border-radius:var(--raio);padding:.75rem .7rem;
+}
+.campo textarea{resize:vertical}
+.campo input[aria-invalid="true"],.campo select[aria-invalid="true"]{border-color:var(--alerta)}
+.campo__dica{font-size:.74rem;color:var(--fraco);margin:.3rem 0 0}
+.dupla{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}
+
+/* contador com botões grandes */
+.contador{display:flex;align-items:stretch;gap:.4rem}
+.contador input{text-align:center;font-size:1.25rem;font-weight:700}
+.contador button{
+  width:56px;flex:0 0 56px;background:var(--caixa2);color:var(--texto);
+  border:1px solid var(--linha);border-radius:var(--raio);font-size:1.5rem;font-weight:700;cursor:pointer;
+}
+.contador button:active{background:var(--sinal);color:#111}
+
+/* seleção rápida */
+.opcoes{display:flex;flex-wrap:wrap;gap:.4rem}
+.opcao{
+  background:var(--caixa2);color:var(--texto);border:1px solid var(--linha);
+  border-radius:var(--raio);padding:.6rem .8rem;font-size:.88rem;cursor:pointer;
+}
+.opcao[aria-pressed="true"]{background:var(--sinal);border-color:var(--sinal);color:#111;font-weight:700}
+
+/* troca de componente */
+.troca{border:1px solid var(--linha);border-radius:var(--raio);padding:.8rem;margin-bottom:.7rem;background:var(--caixa2)}
+.troca__cabeca{display:flex;align-items:center;justify-content:space-between;gap:.6rem}
+.troca__nome{font-weight:700;font-size:.92rem}
+.troca__detalhe{margin-top:.8rem;display:none}
+.troca[data-aberta="true"] .troca__detalhe{display:block}
+.chave{
+  position:relative;width:56px;height:30px;flex:0 0 56px;border-radius:999px;
+  background:#3a4a54;border:1px solid var(--linha);cursor:pointer;padding:0;
+}
+.chave::after{
+  content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;
+  background:var(--fraco);transition:transform .15s ease;
+}
+.chave[aria-checked="true"]{background:var(--sinal)}
+.chave[aria-checked="true"]::after{transform:translateX(26px);background:#111}
+
+/* botões */
+.botao{
+  display:block;width:100%;background:var(--sinal);color:#111;border:1px solid var(--sinal);
+  border-radius:var(--raio);padding:1rem;font-size:1.05rem;font-weight:700;cursor:pointer;
+}
+.botao:active{background:#d9ab12}
+.botao--vazio{background:transparent;color:var(--texto);border-color:var(--linha)}
+.botao--perigo{background:transparent;color:#f0a98d;border-color:var(--alerta)}
+.botao--linha{display:inline-block;width:auto;padding:.6rem .9rem;font-size:.85rem}
+.acoes{display:flex;gap:.6rem;margin-top:1rem;flex-wrap:wrap}
+.acoes .botao{flex:1 1 140px;width:auto}
+
+/* avisos */
+.aviso{
+  border-left:4px solid var(--sinal);background:rgba(242,193,27,.1);
+  padding:.7rem .8rem;font-size:.84rem;border-radius:0 var(--raio) var(--raio) 0;margin-bottom:1rem;
+}
+.aviso--alerta{border-left-color:var(--alerta);background:rgba(200,85,47,.14)}
+.aviso strong{display:block;margin-bottom:.2rem}
+
+/* indicadores do turno */
+.indicadores{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-bottom:1rem}
+.ind{background:var(--caixa);border:1px solid var(--linha);border-radius:var(--raio);padding:.8rem}
+.ind__valor{font-size:1.7rem;font-weight:700;line-height:1}
+.ind__nome{font-size:.74rem;color:var(--fraco);margin-top:.3rem}
+
+/* lista de registros */
+.registro{
+  background:var(--caixa);border:1px solid var(--linha);border-radius:var(--raio);
+  padding:.85rem;margin-bottom:.6rem;
+}
+.registro__cabeca{display:flex;align-items:baseline;gap:.5rem;margin-bottom:.4rem}
+.registro__furo{font-weight:700;font-size:1rem}
+.registro__hora{font-size:.76rem;color:var(--fraco);margin-left:auto}
+.registro__dados{font-size:.85rem;color:#c3c9cc}
+.registro__trocas{margin-top:.4rem;display:flex;flex-wrap:wrap;gap:.3rem}
+.etiqueta{font-size:.72rem;padding:.15rem .45rem;border-radius:3px;border:1px solid var(--linha);background:var(--caixa2)}
+.etiqueta--troca{border-color:var(--alerta);color:#f0a98d}
+.estado{font-size:.72rem;padding:.15rem .45rem;border-radius:3px;font-weight:600}
+.estado--local{background:#3a4a54;color:#d8dee1}
+.estado--exportado{background:rgba(63,157,100,.25);color:#9fdcb5}
+.estado--offline{background:rgba(200,85,47,.25);color:#f0a98d}
+
+.vazio{border:1px dashed var(--linha);border-radius:var(--raio);padding:1.6rem;text-align:center;color:var(--fraco);font-size:.9rem}
+
+.log{font-size:.8rem;border-collapse:collapse;width:100%}
+.log th,.log td{text-align:left;padding:.45rem .4rem;border-bottom:1px solid var(--linha);vertical-align:top}
+.log th{color:var(--fraco);font-size:.72rem}
+.log__tipo{font-weight:700;white-space:nowrap}
+
+.saida{
+  background:#0a1013;border:1px solid var(--linha);border-radius:var(--raio);
+  padding:.8rem;font-family:ui-monospace,monospace;font-size:.72rem;
+  white-space:pre-wrap;max-height:300px;overflow:auto;margin-top:.8rem;
+}
+
+/* rodapé fixo de gravação */
+.gravar{
+  position:fixed;bottom:0;left:0;right:0;z-index:25;
+  background:var(--caixa);border-top:1px solid var(--linha);padding:.7rem .9rem;
+  padding-bottom:calc(.7rem + env(safe-area-inset-bottom));
+}
+.recado{
+  position:fixed;left:.9rem;right:.9rem;bottom:88px;z-index:30;
+  background:var(--ok);color:#06210f;font-weight:700;font-size:.9rem;
+  padding:.8rem .9rem;border-radius:var(--raio);text-align:center;
+  transform:translateY(140%);transition:transform .22s ease;
+}
+.recado[data-visivel="true"]{transform:none}
+.recado[data-tipo="erro"]{background:var(--alerta);color:#fff}
+
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+
+<div class="barra">
+  <div class="barra__topo">
+    <span class="barra__titulo">Apontamento de perfuração</span>
+    <span class="conexao" id="conexao" data-estado="online">
+      <span class="conexao__ponto"></span><span id="conexaoTexto">com sinal</span>
+    </span>
+  </div>
+  <p class="barra__turno" id="barraTurno">Turno não iniciado</p>
+</div>
+
+<div class="abas" role="tablist">
+  <button class="aba" role="tab" id="abaTurno"  aria-selected="false" aria-controls="telaTurno">Turno</button>
+  <button class="aba" role="tab" id="abaFuro"   aria-selected="true"  aria-controls="telaFuro">Furo</button>
+  <button class="aba" role="tab" id="abaDados"  aria-selected="false" aria-controls="telaDados">Registros</button>
+  <button class="aba" role="tab" id="abaLog"    aria-selected="false" aria-controls="telaLog">Log</button>
+</div>
+
+<!-- ================= TELA: TURNO ================= -->
+<section class="tela" id="telaTurno" role="tabpanel" aria-labelledby="abaTurno">
+  <div class="aviso" id="avisoTurno">
+    <strong>Preencha uma vez por turno</strong>
+    Estes dados vão em todos os furos lançados até você encerrar o turno.
+  </div>
+
+  <div class="bloco">
+    <h2 class="bloco__titulo">Identificação</h2>
+    <div class="campo">
+      <label for="tOperador">Operador</label>
+      <input id="tOperador" autocomplete="name">
+    </div>
+    <div class="campo">
+      <label for="tMatricula">Matrícula</label>
+      <input id="tMatricula" inputmode="numeric">
+    </div>
+    <div class="dupla">
+      <div class="campo">
+        <label for="tData">Data</label>
+        <input id="tData" type="date">
+      </div>
+      <div class="campo">
+        <label for="tTurno">Turno</label>
+        <select id="tTurno"></select>
+      </div>
+    </div>
+  </div>
+
+  <div class="bloco">
+    <h2 class="bloco__titulo">Equipamento e frente</h2>
+    <div class="campo">
+      <label>Perfuratriz</label>
+      <div class="opcoes" id="opcoesMaquina"></div>
+      <p class="campo__dica">Lista definida na configuração do app. Se faltar máquina, avise a Produção.</p>
+    </div>
+    <div class="campo">
+      <label>Método</label>
+      <div class="opcoes" id="opcoesMetodo"></div>
+    </div>
+    <div class="dupla">
+      <div class="campo">
+        <label for="tFrente">Frente / galeria</label>
+        <input id="tFrente">
+      </div>
+      <div class="campo">
+        <label for="tNivel">Nível</label>
+        <input id="tNivel">
+      </div>
+    </div>
+    <div class="campo">
+      <label>Rosca da coluna</label>
+      <div class="opcoes" id="opcoesRosca"></div>
+    </div>
+  </div>
+
+  <div class="acoes">
+    <button class="botao" id="iniciarTurno">Iniciar turno</button>
+    <button class="botao botao--vazio" id="encerrarTurno">Encerrar turno</button>
+  </div>
+</section>
+
+<!-- ================= TELA: FURO ================= -->
+<section class="tela" data-ativa="true" id="telaFuro" role="tabpanel" aria-labelledby="abaFuro">
+  <div class="aviso aviso--alerta" id="semTurno" hidden>
+    <strong>Turno não iniciado</strong>
+    Abra a aba Turno e preencha operador e máquina antes de lançar furo.
+  </div>
+
+  <div class="bloco">
+    <h2 class="bloco__titulo">Furo</h2>
+    <div class="dupla">
+      <div class="campo">
+        <label for="fFuro">Identificação do furo</label>
+        <input id="fFuro" autocomplete="off">
+      </div>
+      <div class="campo">
+        <label for="fDiametro">Diâmetro do bit (mm)</label>
+        <input id="fDiametro" inputmode="decimal">
+      </div>
+    </div>
+    <div class="dupla">
+      <div class="campo">
+        <label for="fProfundidade">Profundidade perfurada (m)</label>
+        <input id="fProfundidade" inputmode="decimal">
+      </div>
+      <div class="campo">
+        <label for="fTempo">Tempo de perfuração (min)</label>
+        <input id="fTempo" inputmode="numeric">
+      </div>
+    </div>
+    <div class="campo">
+      <label for="fHastes">Hastes na coluna</label>
+      <div class="contador">
+        <button type="button" data-passo="-1" data-alvo="fHastes" aria-label="Menos uma haste">−</button>
+        <input id="fHastes" inputmode="numeric" value="1">
+        <button type="button" data-passo="1" data-alvo="fHastes" aria-label="Mais uma haste">+</button>
+      </div>
+      <p class="campo__dica">Quantidade de hastes montadas para alcançar a profundidade deste furo.</p>
+    </div>
+  </div>
+
+  <div class="bloco">
+    <h2 class="bloco__titulo">Troca de ferramenta neste furo</h2>
+    <p class="campo__dica" style="margin-bottom:.8rem">
+      Ligue a chave só quando a peça foi realmente substituída. É esse lançamento que gera o consumo.
+    </p>
+    <div id="trocas"></div>
+  </div>
+
+  <div class="bloco">
+    <h2 class="bloco__titulo">Observações</h2>
+    <div class="campo">
+      <label for="fObs">Ocorrência, parada, condição de rocha</label>
+      <textarea id="fObs" rows="2"></textarea>
+    </div>
+  </div>
+
+  <div class="acoes">
+    <button class="botao botao--vazio botao--linha" id="repetirUltimo">Copiar dados do último furo</button>
+    <button class="botao botao--vazio botao--linha" id="limparFuro">Limpar campos</button>
+  </div>
+</section>
+
+<!-- ================= TELA: REGISTROS ================= -->
+<section class="tela" id="telaDados" role="tabpanel" aria-labelledby="abaDados">
+  <div class="indicadores" id="indicadores"></div>
+
+  <div class="acoes">
+    <button class="botao" id="exportarCsv">Baixar CSV</button>
+    <button class="botao botao--vazio" id="exportarJson">Baixar JSON (backup)</button>
+  </div>
+  <div class="acoes">
+    <button class="botao botao--vazio" id="enviarServidor">Enviar ao servidor</button>
+    <button class="botao botao--vazio" id="resumoZap">Resumo por WhatsApp</button>
+  </div>
+
+  <div class="aviso" id="avisoSinc"></div>
+
+  <h3 style="font-size:.95rem;margin:1.4rem 0 .7rem">Furos lançados</h3>
+  <div id="listaRegistros"></div>
+
+  <div class="acoes" style="margin-top:1.6rem">
+    <button class="botao botao--perigo" id="apagarTudo">Apagar tudo do aparelho</button>
+  </div>
+  <p class="campo__dica">
+    Só apague depois de baixar o CSV e confirmar o recebimento. Não existe recuperação.
+  </p>
+</section>
+
+<!-- ================= TELA: LOG ================= -->
+<section class="tela" id="telaLog" role="tabpanel" aria-labelledby="abaLog">
+  <div class="aviso">
+    <strong>Log do aparelho</strong>
+    Registra entradas, saídas de sinal, gravações e exportações, com data e hora do aparelho.
+  </div>
+  <div class="indicadores" id="indicadoresLog"></div>
+  <div style="overflow-x:auto">
+    <table class="log">
+      <thead><tr><th>Quando</th><th>Evento</th><th>Detalhe</th></tr></thead>
+      <tbody id="corpoLog"></tbody>
+    </table>
+  </div>
+  <div class="acoes">
+    <button class="botao botao--vazio" id="exportarLog">Baixar log em CSV</button>
+  </div>
+</section>
+
+<div class="gravar">
+  <button class="botao" id="gravarFuro">Gravar furo</button>
+</div>
+
+<div class="recado" id="recado" role="status" aria-live="polite"></div>
+
+<script>
+/* ============================================================
+   CONFIGURAÇÃO  —  ajuste esta parte e só esta parte
+   ------------------------------------------------------------
+   Os valores abaixo são PLACEHOLDERS. Substitua pelas
+   perfuratrizes, roscas e motivos reais usados na operação
+   antes de entregar o app ao operador.
+   ============================================================ */
+const CONFIG = {
+  // Identificação das perfuratrizes. Use a mesma codificação do PCP.
+  maquinas: ['PERF-01', 'PERF-02', 'PERF-03', 'PERF-04'],
+
+  metodos: ['Top hammer', 'Fundo de furo'],
+
+  // Roscas conforme catálogo Rodopar
+  roscas: ['R25', 'R28', 'R32', 'R38', 'T38', 'T45', 'T51', 'ST58'],
+
+  turnos: ['1º turno', '2º turno', '3º turno'],
+
+  // Componentes cujo consumo é apontado por furo
+  componentes: [
+    { id: 'bit',   nome: 'Bit',   temSerie: true },
+    { id: 'haste', nome: 'Haste', temSerie: true },
+    { id: 'luva',  nome: 'Luva',  temSerie: false },
+    { id: 'punho', nome: 'Punho', temSerie: true }
+  ],
+
+  motivos: ['Desgaste normal', 'Quebra de inserto', 'Trinca', 'Rosca danificada',
+            'Empenamento', 'Enviado para reafiação', 'Perda no furo', 'Outro'],
+
+  /* Endpoint de sincronização. Deixe vazio enquanto o back-end
+     não estiver definido — o botão "Enviar ao servidor" fica
+     desabilitado e o operador é instruído a exportar o CSV.
+     Quando existir, aceite POST com JSON no corpo. */
+  endpoint: '',
+
+  // Telefone que recebe o resumo por WhatsApp (só dígitos, com 55)
+  whatsappSupervisao: ''
+};
+
+/* ============================================================
+   ARMAZENAMENTO LOCAL
+   Tudo fica no próprio aparelho (localStorage). Nada é enviado
+   sem ação explícita do operador.
+   ============================================================ */
+const CHAVES = { turno: 'rdp.turno', furos: 'rdp.furos', log: 'rdp.log', disp: 'rdp.dispositivo' };
+
+const ler = (k, padrao) => {
+  try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : padrao; }
+  catch (e) { return padrao; }
+};
+const gravar = (k, v) => {
+  try { localStorage.setItem(k, JSON.stringify(v)); return true; }
+  catch (e) { recado('Memória do aparelho cheia. Baixe o CSV agora.', 'erro'); return false; }
+};
+
+let turno = ler(CHAVES.turno, null);
+let furos = ler(CHAVES.furos, []);
+let eventos = ler(CHAVES.log, []);
+let dispositivo = ler(CHAVES.disp, null);
+if (!dispositivo) {
+  dispositivo = 'APR-' + Math.random().toString(36).slice(2, 7).toUpperCase();
+  gravar(CHAVES.disp, dispositivo);
+}
+
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => Array.from(document.querySelectorAll(s));
+const agora = () => new Date().toISOString();
+const hora = (iso) => new Date(iso).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+const num = (v) => { const n = parseFloat(String(v).replace(',', '.')); return isNaN(n) ? null : n; };
+
+function registrarEvento(tipo, detalhe) {
+  eventos.push({ em: agora(), tipo: tipo, detalhe: detalhe || '', online: navigator.onLine, dispositivo: dispositivo, operador: turno ? turno.matricula || turno.operador : '' });
+  if (eventos.length > 800) eventos = eventos.slice(-800);
+  gravar(CHAVES.log, eventos);
+  desenharLog();
+}
+
+function recado(texto, tipo) {
+  const el = $('#recado');
+  el.textContent = texto;
+  el.dataset.tipo = tipo || 'ok';
+  el.dataset.visivel = 'true';
+  clearTimeout(recado._t);
+  recado._t = setTimeout(() => { el.dataset.visivel = 'false'; }, 3200);
+}
+
+/* ============================================================
+   CONEXÃO — registra cada período sem sinal
+   ============================================================ */
+let inicioOffline = null;
+
+function atualizarConexao(primeiraCarga) {
+  const on = navigator.onLine;
+  const el = $('#conexao');
+  el.dataset.estado = on ? 'online' : 'offline';
+  $('#conexaoTexto').textContent = on ? 'com sinal' : 'sem sinal — gravando no aparelho';
+
+  if (primeiraCarga) {
+    registrarEvento(on ? 'abertura-online' : 'abertura-offline', 'app aberto');
+    if (!on) inicioOffline = Date.now();
+    return;
+  }
+  if (!on) {
+    inicioOffline = Date.now();
+    registrarEvento('perda-de-sinal', 'início do período offline');
+  } else {
+    let dur = '';
+    if (inicioOffline) {
+      const min = Math.round((Date.now() - inicioOffline) / 60000);
+      dur = 'período offline de ' + min + ' min';
+      inicioOffline = null;
+    }
+    registrarEvento('retorno-de-sinal', dur);
+    const pend = furos.filter((f) => !f.exportado).length;
+    if (pend) recado('Sinal de volta. ' + pend + ' furo(s) pendente(s) de envio.');
+  }
+  atualizarSinc();
+}
+window.addEventListener('online', () => atualizarConexao(false));
+window.addEventListener('offline', () => atualizarConexao(false));
+
+/* ============================================================
+   ABAS
+   ============================================================ */
+$$('.aba').forEach((aba) => {
+  aba.addEventListener('click', () => {
+    $$('.aba').forEach((a) => a.setAttribute('aria-selected', String(a === aba)));
+    $$('.tela').forEach((t) => { t.dataset.ativa = String(t.id === aba.getAttribute('aria-controls')); });
+    $('.gravar').style.display = aba.id === 'abaFuro' ? 'block' : 'none';
+    if (aba.id === 'abaDados') { desenharIndicadores(); desenharRegistros(); atualizarSinc(); }
+    if (aba.id === 'abaLog') desenharLog();
+    window.scrollTo(0, 0);
+  });
+});
+
+/* ============================================================
+   TELA TURNO
+   ============================================================ */
+function opcoesUnicas(alvo, lista, valorInicial) {
+  const cont = $(alvo);
+  cont.innerHTML = '';
+  lista.forEach((v) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'opcao'; b.textContent = v;
+    b.setAttribute('aria-pressed', String(v === valorInicial));
+    b.addEventListener('click', () => {
+      Array.from(cont.children).forEach((c) => c.setAttribute('aria-pressed', String(c === b)));
+    });
+    cont.appendChild(b);
+  });
+}
+const escolhido = (alvo) => {
+  const b = $(alvo + ' [aria-pressed="true"]');
+  return b ? b.textContent : '';
+};
+
+$('#tTurno').innerHTML = CONFIG.turnos.map((t) => '<option>' + t + '</option>').join('');
+opcoesUnicas('#opcoesMaquina', CONFIG.maquinas, turno && turno.maquina);
+opcoesUnicas('#opcoesMetodo', CONFIG.metodos, turno ? turno.metodo : CONFIG.metodos[0]);
+opcoesUnicas('#opcoesRosca', CONFIG.roscas, turno && turno.rosca);
+
+function preencherTurno() {
+  if (!turno) {
+    $('#tData').value = new Date().toISOString().slice(0, 10);
+    return;
+  }
+  $('#tOperador').value = turno.operador || '';
+  $('#tMatricula').value = turno.matricula || '';
+  $('#tData').value = turno.data || '';
+  $('#tTurno').value = turno.turno || CONFIG.turnos[0];
+  $('#tFrente').value = turno.frente || '';
+  $('#tNivel').value = turno.nivel || '';
+}
+
+function barraTurno() {
+  const el = $('#barraTurno');
+  if (!turno) { el.textContent = 'Turno não iniciado'; $('#semTurno').hidden = false; return; }
+  const doTurno = furos.filter((f) => f.turnoId === turno.id);
+  el.textContent = turno.operador + ' · ' + turno.maquina + ' · ' + turno.turno +
+    ' · ' + doTurno.length + ' furo(s) · ' + totalMetros(doTurno).toFixed(1) + ' m';
+  $('#semTurno').hidden = true;
+}
+
+$('#iniciarTurno').addEventListener('click', () => {
+  const operador = $('#tOperador').value.trim();
+  const maquina = escolhido('#opcoesMaquina');
+  $('#tOperador').setAttribute('aria-invalid', String(!operador));
+  if (!operador || !maquina) {
+    recado('Informe o operador e escolha a perfuratriz.', 'erro');
+    return;
+  }
+  turno = {
+    id: 'T' + Date.now(),
+    operador: operador,
+    matricula: $('#tMatricula').value.trim(),
+    data: $('#tData').value,
+    turno: $('#tTurno').value,
+    maquina: maquina,
+    metodo: escolhido('#opcoesMetodo'),
+    rosca: escolhido('#opcoesRosca'),
+    frente: $('#tFrente').value.trim(),
+    nivel: $('#tNivel').value.trim(),
+    abertoEm: agora(),
+    dispositivo: dispositivo
+  };
+  gravar(CHAVES.turno, turno);
+  registrarEvento('turno-iniciado', turno.operador + ' / ' + turno.maquina + ' / ' + turno.turno);
+  barraTurno();
+  recado('Turno iniciado. Pode lançar os furos.');
+  $('#abaFuro').click();
+});
+
+$('#encerrarTurno').addEventListener('click', () => {
+  if (!turno) { recado('Nenhum turno aberto.', 'erro'); return; }
+  const doTurno = furos.filter((f) => f.turnoId === turno.id);
+  const pend = doTurno.filter((f) => !f.exportado).length;
+  if (!confirm('Encerrar o turno de ' + turno.operador + '?\n' + doTurno.length +
+      ' furo(s) lançado(s), ' + pend + ' pendente(s) de envio.\nOs registros continuam no aparelho.')) return;
+  registrarEvento('turno-encerrado', doTurno.length + ' furos, ' + totalMetros(doTurno).toFixed(1) + ' m');
+  turno = null;
+  localStorage.removeItem(CHAVES.turno);
+  barraTurno();
+  recado('Turno encerrado. Não esqueça de baixar o CSV.');
+});
+
+/* ============================================================
+   TELA FURO
+   ============================================================ */
+$$('.contador button').forEach((b) => {
+  b.addEventListener('click', () => {
+    const campo = document.getElementById(b.dataset.alvo);
+    const atual = parseInt(campo.value, 10) || 0;
+    campo.value = Math.max(0, atual + parseInt(b.dataset.passo, 10));
+  });
+});
+
+$('#trocas').innerHTML = CONFIG.componentes.map((c) => `
+  <div class="troca" id="troca-${c.id}">
+    <div class="troca__cabeca">
+      <span class="troca__nome">${c.nome} trocado</span>
+      <button type="button" class="chave" role="switch" aria-checked="false"
+              data-comp="${c.id}" aria-label="Trocou ${c.nome.toLowerCase()}?"></button>
+    </div>
+    <div class="troca__detalhe">
+      <div class="campo">
+        <label for="motivo-${c.id}">Motivo da troca</label>
+        <select id="motivo-${c.id}">${CONFIG.motivos.map((m) => '<option>' + m + '</option>').join('')}</select>
+      </div>
+      ${c.temSerie ? `
+      <div class="campo">
+        <label for="serie-${c.id}">Código ou série da peça retirada</label>
+        <input id="serie-${c.id}" autocomplete="off">
+      </div>
+      <div class="campo">
+        <label for="metros-${c.id}">Metros acumulados da peça retirada</label>
+        <input id="metros-${c.id}" inputmode="decimal">
+        <p class="campo__dica">Se não houver controle por peça, deixe vazio. Não estime.</p>
+      </div>` : ''}
+    </div>
+  </div>`).join('');
+
+$$('.chave').forEach((ch) => {
+  ch.addEventListener('click', () => {
+    const ligada = ch.getAttribute('aria-checked') === 'true';
+    ch.setAttribute('aria-checked', String(!ligada));
+    document.getElementById('troca-' + ch.dataset.comp).dataset.aberta = String(!ligada);
+  });
+});
+
+function limparFuro(manterCabecalho) {
+  if (!manterCabecalho) {
+    $('#fDiametro').value = '';
+    $('#fHastes').value = '1';
+  }
+  $('#fFuro').value = '';
+  $('#fProfundidade').value = '';
+  $('#fTempo').value = '';
+  $('#fObs').value = '';
+  $$('.chave').forEach((ch) => {
+    ch.setAttribute('aria-checked', 'false');
+    document.getElementById('troca-' + ch.dataset.comp).dataset.aberta = 'false';
+  });
+  CONFIG.componentes.forEach((c) => {
+    if (!c.temSerie) return;
+    const s = $('#serie-' + c.id); if (s) s.value = '';
+    const m = $('#metros-' + c.id); if (m) m.value = '';
+  });
+  $$('[aria-invalid="true"]').forEach((e) => e.removeAttribute('aria-invalid'));
+}
+
+$('#limparFuro').addEventListener('click', () => { limparFuro(false); recado('Campos limpos.'); });
+
+$('#repetirUltimo').addEventListener('click', () => {
+  const ultimo = furos[furos.length - 1];
+  if (!ultimo) { recado('Nenhum furo lançado ainda.', 'erro'); return; }
+  $('#fDiametro').value = ultimo.diametro != null ? ultimo.diametro : '';
+  $('#fHastes').value = ultimo.hastes != null ? ultimo.hastes : 1;
+  $('#fProfundidade').value = ultimo.profundidade != null ? ultimo.profundidade : '';
+  recado('Diâmetro, hastes e profundidade copiados. Confira antes de gravar.');
+});
+
+$('#gravarFuro').addEventListener('click', () => {
+  if (!turno) { recado('Inicie o turno antes de lançar furo.', 'erro'); $('#abaTurno').click(); return; }
+
+  const idFuro = $('#fFuro').value.trim();
+  const prof = num($('#fProfundidade').value);
+  $('#fFuro').setAttribute('aria-invalid', String(!idFuro));
+  $('#fProfundidade').setAttribute('aria-invalid', String(prof === null));
+  if (!idFuro || prof === null) {
+    recado('Identificação do furo e profundidade são obrigatórias.', 'erro');
+    return;
+  }
+
+  const trocas = [];
+  CONFIG.componentes.forEach((c) => {
+    const ch = document.querySelector('.chave[data-comp="' + c.id + '"]');
+    if (ch.getAttribute('aria-checked') !== 'true') return;
+    trocas.push({
+      componente: c.nome,
+      motivo: $('#motivo-' + c.id).value,
+      serie: c.temSerie ? ($('#serie-' + c.id).value.trim() || null) : null,
+      metrosAcumulados: c.temSerie ? num($('#metros-' + c.id).value) : null
+    });
+  });
+
+  const registro = {
+    id: 'F' + Date.now() + '-' + Math.random().toString(36).slice(2, 6),
+    turnoId: turno.id,
+    operador: turno.operador,
+    matricula: turno.matricula,
+    data: turno.data,
+    turno: turno.turno,
+    maquina: turno.maquina,
+    metodo: turno.metodo,
+    rosca: turno.rosca,
+    frente: turno.frente,
+    nivel: turno.nivel,
+    furo: idFuro,
+    diametro: num($('#fDiametro').value),
+    profundidade: prof,
+    tempoMin: num($('#fTempo').value),
+    hastes: parseInt($('#fHastes').value, 10) || null,
+    trocas: trocas,
+    observacao: $('#fObs').value.trim(),
+    gravadoEm: agora(),
+    gravadoOffline: !navigator.onLine,
+    dispositivo: dispositivo,
+    exportado: false,
+    enviadoEm: null
+  };
+
+  furos.push(registro);
+  if (!gravar(CHAVES.furos, furos)) { furos.pop(); return; }
+
+  registrarEvento(navigator.onLine ? 'furo-gravado' : 'furo-gravado-offline',
+    'furo ' + idFuro + ' · ' + prof + ' m · ' + trocas.length + ' troca(s)');
+  limparFuro(true);
+  barraTurno();
+  recado('Furo ' + idFuro + ' gravado' + (navigator.onLine ? '.' : ' sem sinal.'));
+  $('#fFuro').focus();
+});
+
+/* ============================================================
+   INDICADORES E LISTA
+   ============================================================ */
+const totalMetros = (lista) => lista.reduce((s, f) => s + (f.profundidade || 0), 0);
+const contaTrocas = (lista, comp) =>
+  lista.reduce((s, f) => s + f.trocas.filter((t) => t.componente === comp).length, 0);
+
+function desenharIndicadores() {
+  const doTurno = turno ? furos.filter((f) => f.turnoId === turno.id) : furos;
+  const metros = totalMetros(doTurno);
+  const bits = contaTrocas(doTurno, 'Bit');
+  const cards = [
+    { v: doTurno.length, n: 'furos lançados' },
+    { v: metros.toFixed(1), n: 'metros perfurados' },
+    { v: bits, n: 'bits trocados' },
+    { v: bits ? (metros / bits).toFixed(1) : '—', n: 'metros por bit trocado' },
+    { v: contaTrocas(doTurno, 'Haste'), n: 'hastes trocadas' },
+    { v: furos.filter((f) => !f.exportado).length, n: 'pendentes de envio' }
+  ];
+  $('#indicadores').innerHTML = cards.map((c) =>
+    `<div class="ind"><div class="ind__valor">${c.v}</div><div class="ind__nome">${c.n}</div></div>`).join('');
+}
+
+function desenharRegistros() {
+  if (!furos.length) {
+    $('#listaRegistros').innerHTML = '<div class="vazio">Nenhum furo lançado neste aparelho.</div>';
+    return;
+  }
+  $('#listaRegistros').innerHTML = furos.slice().reverse().map((f) => `
+    <div class="registro">
+      <div class="registro__cabeca">
+        <span class="registro__furo">${f.furo}</span>
+        <span class="estado ${f.exportado ? 'estado--exportado' : (f.gravadoOffline ? 'estado--offline' : 'estado--local')}">
+          ${f.exportado ? 'exportado' : (f.gravadoOffline ? 'offline' : 'no aparelho')}
+        </span>
+        <span class="registro__hora">${hora(f.gravadoEm)}</span>
+      </div>
+      <div class="registro__dados">
+        ${f.profundidade} m · ${f.hastes || '—'} haste(s) · ${f.diametro ? f.diametro + ' mm' : 'sem diâmetro'}<br>
+        ${f.maquina} · ${f.rosca || 'rosca não informada'} · ${f.operador}
+      </div>
+      ${f.trocas.length ? `<div class="registro__trocas">${f.trocas.map((t) =>
+        `<span class="etiqueta etiqueta--troca">${t.componente}: ${t.motivo}</span>`).join('')}</div>` : ''}
+      ${f.observacao ? `<div class="registro__dados" style="margin-top:.4rem;font-style:italic">${f.observacao}</div>` : ''}
+    </div>`).join('');
+}
+
+function atualizarSinc() {
+  const pend = furos.filter((f) => !f.exportado).length;
+  const el = $('#avisoSinc');
+  const botao = $('#enviarServidor');
+  if (!CONFIG.endpoint) {
+    botao.disabled = true;
+    botao.style.opacity = '.45';
+    el.className = 'aviso aviso--alerta';
+    el.innerHTML = '<strong>Sem servidor configurado</strong>' +
+      'O envio automático está desligado porque o endereço do back-end não foi definido. ' +
+      'Baixe o CSV no fim do turno e entregue à Produção. ' + pend + ' furo(s) pendente(s).';
+    return;
+  }
+  botao.disabled = false;
+  botao.style.opacity = '1';
+  el.className = 'aviso';
+  el.innerHTML = navigator.onLine
+    ? '<strong>' + pend + ' furo(s) pendente(s)</strong>Toque em Enviar ao servidor.'
+    : '<strong>Sem sinal</strong>' + pend + ' furo(s) aguardando. O envio é feito quando o sinal voltar.';
+}
+
+/* ============================================================
+   EXPORTAÇÃO
+   ============================================================ */
+function baixar(nome, conteudo, tipo) {
+  const blob = new Blob(['\ufeff' + conteudo], { type: tipo + ';charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = nome;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+}
+
+const csvCampo = (v) => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+
+function montarCsv() {
+  const cab = ['id', 'data', 'turno', 'operador', 'matricula', 'maquina', 'metodo', 'rosca',
+    'frente', 'nivel', 'furo', 'diametro_mm', 'profundidade_m', 'tempo_min', 'hastes',
+    'bit_trocado', 'bit_motivo', 'bit_serie', 'bit_metros_acum',
+    'haste_trocada', 'haste_motivo', 'haste_serie', 'haste_metros_acum',
+    'luva_trocada', 'luva_motivo', 'punho_trocado', 'punho_motivo', 'punho_serie',
+    'observacao', 'gravado_em', 'gravado_offline', 'dispositivo'];
+  const t = (f, nome) => f.trocas.find((x) => x.componente === nome) || {};
+  const linhas = furos.map((f) => {
+    const b = t(f, 'Bit'), h = t(f, 'Haste'), l = t(f, 'Luva'), p = t(f, 'Punho');
+    return [f.id, f.data, f.turno, f.operador, f.matricula, f.maquina, f.metodo, f.rosca,
+      f.frente, f.nivel, f.furo, f.diametro, f.profundidade, f.tempoMin, f.hastes,
+      b.componente ? 'sim' : 'nao', b.motivo, b.serie, b.metrosAcumulados,
+      h.componente ? 'sim' : 'nao', h.motivo, h.serie, h.metrosAcumulados,
+      l.componente ? 'sim' : 'nao', l.motivo,
+      p.componente ? 'sim' : 'nao', p.motivo, p.serie,
+      f.observacao, f.gravadoEm, f.gravadoOffline ? 'sim' : 'nao', f.dispositivo]
+      .map(csvCampo).join(';');
+  });
+  return [cab.join(';')].concat(linhas).join('\r\n');
+}
+
+function marcarExportados() {
+  furos.forEach((f) => { f.exportado = true; });
+  gravar(CHAVES.furos, furos);
+  desenharRegistros(); desenharIndicadores(); atualizarSinc();
+}
+
+$('#exportarCsv').addEventListener('click', () => {
+  if (!furos.length) { recado('Nada para exportar.', 'erro'); return; }
+  const nome = 'apontamento_' + (turno ? turno.maquina + '_' : '') + new Date().toISOString().slice(0, 10) + '.csv';
+  baixar(nome, montarCsv(), 'text/csv');
+  registrarEvento('exportacao-csv', furos.length + ' furos · ' + nome);
+  marcarExportados();
+  recado('CSV baixado. Entregue o arquivo à Produção.');
+});
+
+$('#exportarJson').addEventListener('click', () => {
+  const pacote = { dispositivo: dispositivo, geradoEm: agora(), turnoAtual: turno, furos: furos, log: eventos };
+  baixar('backup_apontamento_' + new Date().toISOString().slice(0, 10) + '.json',
+    JSON.stringify(pacote, null, 2), 'application/json');
+  registrarEvento('exportacao-json', furos.length + ' furos, ' + eventos.length + ' eventos');
+  recado('Backup completo baixado.');
+});
+
+$('#exportarLog').addEventListener('click', () => {
+  const cab = 'quando;evento;detalhe;online;dispositivo;operador';
+  const linhas = eventos.map((e) => [e.em, e.tipo, e.detalhe, e.online ? 'sim' : 'nao', e.dispositivo, e.operador].map(csvCampo).join(';'));
+  baixar('log_' + dispositivo + '_' + new Date().toISOString().slice(0, 10) + '.csv',
+    [cab].concat(linhas).join('\r\n'), 'text/csv');
+  recado('Log baixado.');
+});
+
+$('#resumoZap').addEventListener('click', () => {
+  const doTurno = turno ? furos.filter((f) => f.turnoId === turno.id) : furos;
+  if (!doTurno.length) { recado('Nenhum furo no turno.', 'erro'); return; }
+  const metros = totalMetros(doTurno);
+  const bits = contaTrocas(doTurno, 'Bit');
+  const texto = [
+    'APONTAMENTO DE PERFURAÇÃO',
+    turno ? turno.data + ' · ' + turno.turno + ' · ' + turno.maquina : '',
+    turno ? 'Operador: ' + turno.operador : '',
+    'Furos: ' + doTurno.length,
+    'Metros: ' + metros.toFixed(1),
+    'Bits trocados: ' + bits,
+    'Hastes trocadas: ' + contaTrocas(doTurno, 'Haste'),
+    'Luvas trocadas: ' + contaTrocas(doTurno, 'Luva'),
+    'Punhos trocados: ' + contaTrocas(doTurno, 'Punho'),
+    '',
+    'Resumo gerado no aparelho ' + dispositivo + '. CSV com o detalhe por furo foi baixado separadamente.'
+  ].filter(Boolean).join('\n');
+  const base = CONFIG.whatsappSupervisao
+    ? 'https://wa.me/' + CONFIG.whatsappSupervisao + '?text='
+    : 'https://wa.me/?text=';
+  window.open(base + encodeURIComponent(texto), '_blank');
+  registrarEvento('resumo-whatsapp', doTurno.length + ' furos');
+});
+
+$('#enviarServidor').addEventListener('click', async () => {
+  if (!CONFIG.endpoint) return;
+  const pendentes = furos.filter((f) => !f.exportado);
+  if (!pendentes.length) { recado('Nada pendente.'); return; }
+  if (!navigator.onLine) { recado('Sem sinal. Tente quando o sinal voltar.', 'erro'); return; }
+  try {
+    const r = await fetch(CONFIG.endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ dispositivo: dispositivo, furos: pendentes, log: eventos.slice(-100) })
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    pendentes.forEach((f) => { f.exportado = true; f.enviadoEm = agora(); });
+    gravar(CHAVES.furos, furos);
+    registrarEvento('envio-servidor', pendentes.length + ' furos enviados');
+    desenharRegistros(); desenharIndicadores(); atualizarSinc();
+    recado(pendentes.length + ' furo(s) enviado(s).');
+  } catch (e) {
+    registrarEvento('falha-envio', String(e.message || e));
+    recado('Falha no envio. Os dados continuam no aparelho.', 'erro');
+  }
+});
+
+$('#apagarTudo').addEventListener('click', () => {
+  const pend = furos.filter((f) => !f.exportado).length;
+  if (pend && !confirm('Existem ' + pend + ' furo(s) que nunca foram exportados. Apagar mesmo assim?')) return;
+  if (!confirm('Apagar TODOS os furos e o log deste aparelho? Não há recuperação.')) return;
+  furos = []; eventos = [];
+  gravar(CHAVES.furos, furos); gravar(CHAVES.log, eventos);
+  registrarEvento('base-apagada', 'apagado pelo usuário no aparelho');
+  desenharRegistros(); desenharIndicadores(); atualizarSinc(); desenharLog();
+  recado('Base local apagada.');
+});
+
+/* ============================================================
+   LOG
+   ============================================================ */
+function desenharLog() {
+  const corpo = $('#corpoLog');
+  if (!corpo) return;
+  corpo.innerHTML = eventos.slice().reverse().slice(0, 200).map((e) =>
+    `<tr><td>${hora(e.em)}</td><td class="log__tipo">${e.tipo}</td><td>${e.detalhe || '—'}</td></tr>`).join('')
+    || '<tr><td colspan="3">Sem eventos.</td></tr>';
+
+  const perdas = eventos.filter((e) => e.tipo === 'perda-de-sinal').length;
+  const offline = eventos.filter((e) => e.tipo === 'furo-gravado-offline').length;
+  $('#indicadoresLog').innerHTML = [
+    { v: eventos.length, n: 'eventos registrados' },
+    { v: perdas, n: 'quedas de sinal' },
+    { v: offline, n: 'furos gravados sem sinal' },
+    { v: dispositivo, n: 'aparelho' }
+  ].map((c) => `<div class="ind"><div class="ind__valor" style="font-size:${String(c.v).length > 6 ? '1rem' : '1.7rem'}">${c.v}</div><div class="ind__nome">${c.n}</div></div>`).join('');
+}
+
+/* ============================================================
+   INICIALIZAÇÃO
+   ============================================================ */
+preencherTurno();
+barraTurno();
+desenharIndicadores();
+desenharRegistros();
+desenharLog();
+atualizarConexao(true);
+atualizarSinc();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {
+      recado('App não ficou disponível offline. Abra com sinal uma vez.', 'erro');
+    });
+  });
+}
+</script>
+</body>
+</html>
