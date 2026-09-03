@@ -1,4 +1,12 @@
-const VERSAO = 'apontamento-v1';
+/* ============================================================
+   sw.js — service worker do app de apontamento
+   ------------------------------------------------------------
+   Guarda os arquivos no aparelho para que o app abra sem sinal.
+   IMPORTANTE: ao alterar o apontamento.html, mude o número da
+   VERSAO abaixo. Sem isso o aparelho continua abrindo a versão
+   antiga guardada no cache.
+   ============================================================ */
+const VERSAO = 'apontamento-v2';
 
 const ARQUIVOS = [
   'apontamento.html',
@@ -24,6 +32,8 @@ self.addEventListener('activate', (evento) => {
   );
 });
 
+/* Cache primeiro: subterrâneo não tem sinal, então nunca espera
+   a rede. Quando há sinal, atualiza o cache em segundo plano. */
 self.addEventListener('fetch', (evento) => {
   const req = evento.request;
   if (req.method !== 'GET') return;

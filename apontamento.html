@@ -58,7 +58,10 @@ button,input,select,textarea{font:inherit}
 }
 .aba[aria-selected="true"]{color:var(--texto);border-bottom-color:var(--sinal)}
 
-.tela{display:none;padding:1rem .9rem 2rem}
+.tela{display:none;padding:1rem .9rem 2rem;max-width:680px;margin-inline:auto}
+.barra__topo,.barra__turno{max-width:680px;margin-inline:auto}
+.abas{max-width:712px;margin-inline:auto}
+.gravar > .botao{max-width:680px;margin-inline:auto}
 .tela[data-ativa="true"]{display:block}
 
 /* ---------- formulário ---------- */
@@ -173,10 +176,13 @@ button,input,select,textarea{font:inherit}
   padding-bottom:calc(.7rem + env(safe-area-inset-bottom));
 }
 .recado{
-  position:fixed;left:.9rem;right:.9rem;bottom:88px;z-index:30;
+  position:fixed;left:.6rem;right:.6rem;top:.6rem;z-index:40;
+  max-width:660px;margin-inline:auto;
   background:var(--ok);color:#06210f;font-weight:700;font-size:.9rem;
   padding:.8rem .9rem;border-radius:var(--raio);text-align:center;
-  transform:translateY(140%);transition:transform .22s ease;
+  box-shadow:0 8px 22px rgba(0,0,0,.55);
+  transform:translateY(-220%);transition:transform .22s ease;
+  pointer-events:none;
 }
 .recado[data-visivel="true"]{transform:none}
 .recado[data-tipo="erro"]{background:var(--alerta);color:#fff}
@@ -430,7 +436,7 @@ const ler = (k, padrao) => {
 };
 const gravar = (k, v) => {
   try { localStorage.setItem(k, JSON.stringify(v)); return true; }
-  catch (e) { recado('Memória do aparelho cheia. Baixe o CSV agora.', 'erro'); return false; }
+  catch (e) { mostrarRecado('Memória do aparelho cheia. Baixe o CSV agora.', 'erro'); return false; }
 };
 
 let turno = ler(CHAVES.turno, null);
@@ -455,13 +461,15 @@ function registrarEvento(tipo, detalhe) {
   desenharLog();
 }
 
-function recado(texto, tipo) {
-  const el = $('#recado');
+let cronometroRecado = null;
+function mostrarRecado(texto, tipo) {
+  const el = document.getElementById('recado');
+  if (!el) return;
   el.textContent = texto;
   el.dataset.tipo = tipo || 'ok';
   el.dataset.visivel = 'true';
-  clearTimeout(recado._t);
-  recado._t = setTimeout(() => { el.dataset.visivel = 'false'; }, 3200);
+  if (cronometroRecado) clearTimeout(cronometroRecado);
+  cronometroRecado = setTimeout(function () { el.dataset.visivel = 'false'; }, 3500);
 }
 
 /* ============================================================
@@ -492,7 +500,7 @@ function atualizarConexao(primeiraCarga) {
     }
     registrarEvento('retorno-de-sinal', dur);
     const pend = furos.filter((f) => !f.exportado).length;
-    if (pend) recado('Sinal de volta. ' + pend + ' furo(s) pendente(s) de envio.');
+    if (pend) mostrarRecado('Sinal de volta. ' + pend + ' furo(s) pendente(s) de envio.');
   }
   atualizarSinc();
 }
@@ -566,7 +574,7 @@ $('#iniciarTurno').addEventListener('click', () => {
   const maquina = escolhido('#opcoesMaquina');
   $('#tOperador').setAttribute('aria-invalid', String(!operador));
   if (!operador || !maquina) {
-    recado('Informe o operador e escolha a perfuratriz.', 'erro');
+    mostrarRecado('Informe o operador e escolha a perfuratriz.', 'erro');
     return;
   }
   turno = {
@@ -586,12 +594,12 @@ $('#iniciarTurno').addEventListener('click', () => {
   gravar(CHAVES.turno, turno);
   registrarEvento('turno-iniciado', turno.operador + ' / ' + turno.maquina + ' / ' + turno.turno);
   barraTurno();
-  recado('Turno iniciado. Pode lançar os furos.');
+  mostrarRecado('Turno iniciado. Pode lançar os furos.');
   $('#abaFuro').click();
 });
 
 $('#encerrarTurno').addEventListener('click', () => {
-  if (!turno) { recado('Nenhum turno aberto.', 'erro'); return; }
+  if (!turno) { mostrarRecado('Nenhum turno aberto.', 'erro'); return; }
   const doTurno = furos.filter((f) => f.turnoId === turno.id);
   const pend = doTurno.filter((f) => !f.exportado).length;
   if (!confirm('Encerrar o turno de ' + turno.operador + '?\n' + doTurno.length +
@@ -600,7 +608,7 @@ $('#encerrarTurno').addEventListener('click', () => {
   turno = null;
   localStorage.removeItem(CHAVES.turno);
   barraTurno();
-  recado('Turno encerrado. Não esqueça de baixar o CSV.');
+  mostrarRecado('Turno encerrado. Não esqueça de baixar o CSV.');
 });
 
 /* ============================================================
@@ -668,26 +676,26 @@ function limparFuro(manterCabecalho) {
   $$('[aria-invalid="true"]').forEach((e) => e.removeAttribute('aria-invalid'));
 }
 
-$('#limparFuro').addEventListener('click', () => { limparFuro(false); recado('Campos limpos.'); });
+$('#limparFuro').addEventListener('click', () => { limparFuro(false); mostrarRecado('Campos limpos.'); });
 
 $('#repetirUltimo').addEventListener('click', () => {
   const ultimo = furos[furos.length - 1];
-  if (!ultimo) { recado('Nenhum furo lançado ainda.', 'erro'); return; }
+  if (!ultimo) { mostrarRecado('Nenhum furo lançado ainda.', 'erro'); return; }
   $('#fDiametro').value = ultimo.diametro != null ? ultimo.diametro : '';
   $('#fHastes').value = ultimo.hastes != null ? ultimo.hastes : 1;
   $('#fProfundidade').value = ultimo.profundidade != null ? ultimo.profundidade : '';
-  recado('Diâmetro, hastes e profundidade copiados. Confira antes de gravar.');
+  mostrarRecado('Diâmetro, hastes e profundidade copiados. Confira antes de gravar.');
 });
 
 $('#gravarFuro').addEventListener('click', () => {
-  if (!turno) { recado('Inicie o turno antes de lançar furo.', 'erro'); $('#abaTurno').click(); return; }
+  if (!turno) { mostrarRecado('Inicie o turno antes de lançar furo.', 'erro'); $('#abaTurno').click(); return; }
 
   const idFuro = $('#fFuro').value.trim();
   const prof = num($('#fProfundidade').value);
   $('#fFuro').setAttribute('aria-invalid', String(!idFuro));
   $('#fProfundidade').setAttribute('aria-invalid', String(prof === null));
   if (!idFuro || prof === null) {
-    recado('Identificação do furo e profundidade são obrigatórias.', 'erro');
+    mostrarRecado('Identificação do furo e profundidade são obrigatórias.', 'erro');
     return;
   }
 
@@ -736,7 +744,7 @@ $('#gravarFuro').addEventListener('click', () => {
     'furo ' + idFuro + ' · ' + prof + ' m · ' + trocas.length + ' troca(s)');
   limparFuro(true);
   barraTurno();
-  recado('Furo ' + idFuro + ' gravado' + (navigator.onLine ? '.' : ' sem sinal.'));
+  mostrarRecado('Furo ' + idFuro + ' gravado' + (navigator.onLine ? '.' : ' sem sinal.'));
   $('#fFuro').focus();
 });
 
@@ -851,12 +859,12 @@ function marcarExportados() {
 }
 
 $('#exportarCsv').addEventListener('click', () => {
-  if (!furos.length) { recado('Nada para exportar.', 'erro'); return; }
+  if (!furos.length) { mostrarRecado('Nada para exportar.', 'erro'); return; }
   const nome = 'apontamento_' + (turno ? turno.maquina + '_' : '') + new Date().toISOString().slice(0, 10) + '.csv';
   baixar(nome, montarCsv(), 'text/csv');
   registrarEvento('exportacao-csv', furos.length + ' furos · ' + nome);
   marcarExportados();
-  recado('CSV baixado. Entregue o arquivo à Produção.');
+  mostrarRecado('CSV baixado. Entregue o arquivo à Produção.');
 });
 
 $('#exportarJson').addEventListener('click', () => {
@@ -864,7 +872,7 @@ $('#exportarJson').addEventListener('click', () => {
   baixar('backup_apontamento_' + new Date().toISOString().slice(0, 10) + '.json',
     JSON.stringify(pacote, null, 2), 'application/json');
   registrarEvento('exportacao-json', furos.length + ' furos, ' + eventos.length + ' eventos');
-  recado('Backup completo baixado.');
+  mostrarRecado('Backup completo baixado.');
 });
 
 $('#exportarLog').addEventListener('click', () => {
@@ -872,12 +880,12 @@ $('#exportarLog').addEventListener('click', () => {
   const linhas = eventos.map((e) => [e.em, e.tipo, e.detalhe, e.online ? 'sim' : 'nao', e.dispositivo, e.operador].map(csvCampo).join(';'));
   baixar('log_' + dispositivo + '_' + new Date().toISOString().slice(0, 10) + '.csv',
     [cab].concat(linhas).join('\r\n'), 'text/csv');
-  recado('Log baixado.');
+  mostrarRecado('Log baixado.');
 });
 
 $('#resumoZap').addEventListener('click', () => {
   const doTurno = turno ? furos.filter((f) => f.turnoId === turno.id) : furos;
-  if (!doTurno.length) { recado('Nenhum furo no turno.', 'erro'); return; }
+  if (!doTurno.length) { mostrarRecado('Nenhum furo no turno.', 'erro'); return; }
   const metros = totalMetros(doTurno);
   const bits = contaTrocas(doTurno, 'Bit');
   const texto = [
@@ -903,8 +911,8 @@ $('#resumoZap').addEventListener('click', () => {
 $('#enviarServidor').addEventListener('click', async () => {
   if (!CONFIG.endpoint) return;
   const pendentes = furos.filter((f) => !f.exportado);
-  if (!pendentes.length) { recado('Nada pendente.'); return; }
-  if (!navigator.onLine) { recado('Sem sinal. Tente quando o sinal voltar.', 'erro'); return; }
+  if (!pendentes.length) { mostrarRecado('Nada pendente.'); return; }
+  if (!navigator.onLine) { mostrarRecado('Sem sinal. Tente quando o sinal voltar.', 'erro'); return; }
   try {
     const r = await fetch(CONFIG.endpoint, {
       method: 'POST',
@@ -916,10 +924,10 @@ $('#enviarServidor').addEventListener('click', async () => {
     gravar(CHAVES.furos, furos);
     registrarEvento('envio-servidor', pendentes.length + ' furos enviados');
     desenharRegistros(); desenharIndicadores(); atualizarSinc();
-    recado(pendentes.length + ' furo(s) enviado(s).');
+    mostrarRecado(pendentes.length + ' furo(s) enviado(s).');
   } catch (e) {
     registrarEvento('falha-envio', String(e.message || e));
-    recado('Falha no envio. Os dados continuam no aparelho.', 'erro');
+    mostrarRecado('Falha no envio. Os dados continuam no aparelho.', 'erro');
   }
 });
 
@@ -931,7 +939,7 @@ $('#apagarTudo').addEventListener('click', () => {
   gravar(CHAVES.furos, furos); gravar(CHAVES.log, eventos);
   registrarEvento('base-apagada', 'apagado pelo usuário no aparelho');
   desenharRegistros(); desenharIndicadores(); atualizarSinc(); desenharLog();
-  recado('Base local apagada.');
+  mostrarRecado('Base local apagada.');
 });
 
 /* ============================================================
@@ -968,7 +976,7 @@ atualizarSinc();
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('sw.js').catch(() => {
-      recado('App não ficou disponível offline. Abra com sinal uma vez.', 'erro');
+      mostrarRecado('App não ficou disponível offline. Abra com sinal uma vez.', 'erro');
     });
   });
 }
