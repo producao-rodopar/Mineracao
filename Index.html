@@ -1,1 +1,326 @@
-inic
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rodopar | Ferramentas de perfuração para mineração</title>
+<meta name="description" content="Bits roscados, retracs, alargadores, bits cônicos, fundo de furo DTH, punhos, luvas e hastes. Catálogo consultável, decodificador de part number e guia de aplicação.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/estilo.css">
+</head>
+<body>
+
+<header class="topo">
+  <div class="topo__interno">
+    <a class="marca" href="#topo">
+      <span class="marca__nome">rodo<span>par</span></span>
+      <span class="marca__desc">ferramentas de perfuração</span>
+    </a>
+    <nav class="menu" aria-label="Seções">
+      <a href="#coluna">Coluna</a>
+      <a href="#catalogo">Catálogo</a>
+      <a href="#operacao">Operação</a>
+      <a href="#glossario">Glossário</a>
+      <a href="#servicos">Usinagem</a>
+      <a href="#cotacao">Cotação</a>
+    </nav>
+    <button class="contador-topo" id="contadorTopo" hidden>Cotação: <span id="qtdTopo">0</span></button>
+  </div>
+</header>
+
+<!-- ===================== HERO: DECODIFICADOR ===================== -->
+<section class="hero" id="topo">
+  <div class="hero__interno">
+    <div>
+      <h1>A rocha é dura. Achar a ferramenta certa não precisa ser.</h1>
+      <p class="hero__sub">Fabricamos bits, punhos, luvas e hastes para perfuração de rocha desde 1991, em Lauro de Freitas, Bahia. Todo produto carrega um código que diz exatamente o que ele é. Comece por ele.</p>
+      <div class="hero__meta">
+        <span>Roscas R25 a ST58</span>
+        <span>Top hammer e DTH</span>
+        <span>Projetos especiais sob desenho</span>
+      </div>
+    </div>
+
+    <div class="decodificador">
+      <div class="decodificador__titulo">Decodificador de part number</div>
+      <p class="decodificador__ajuda">Digite o código gravado na ferramenta e veja o que cada trecho significa, conforme o guia de códigos do nosso catálogo.</p>
+      <div class="campo-pn">
+        <input id="entradaPN" type="text" value="BR102-T38N-683-20" spellcheck="false" autocomplete="off" aria-label="Part number">
+      </div>
+      <div class="exemplos" id="exemplosPN"></div>
+      <div class="leitura" id="leituraPN" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<div class="aviso">
+  Site de demonstração construído a partir do catálogo público da Rodopar. <strong>Dados técnicos exigem conferência antes de compra ou uso em campo.</strong>
+</div>
+
+<!-- ===================== COLUNA DE PERFURAÇÃO ===================== -->
+<section class="faixa" id="coluna">
+  <div class="interno">
+    <div class="cabeca-secao">
+      <h2>Monte a coluna</h2>
+      <p>Escolha a rosca e clique em cada peça do conjunto para ver o que existe em catálogo naquele padrão.</p>
+    </div>
+
+    <div class="coluna-controles" id="controlesRosca" role="group" aria-label="Padrão de rosca">
+      <span class="rotulo">Rosca:</span>
+    </div>
+
+    <svg class="esquema" viewBox="0 0 920 200" role="group" aria-label="Esquema de uma coluna de perfuração top hammer">
+      <line x1="20" y1="100" x2="900" y2="100" stroke="#c3cdcb" stroke-width="1" stroke-dasharray="3 4"/>
+
+      <!-- PUNHO -->
+      <g class="esquema-parte" data-papel="punho" tabindex="0" role="button" aria-label="Punho">
+        <rect x="28" y="82" width="26" height="36" fill="#4a6570"/>
+        <rect x="54" y="86" width="8" height="28" fill="#16232a"/>
+        <rect x="62" y="86" width="8" height="28" fill="#4a6570"/>
+        <rect x="70" y="86" width="8" height="28" fill="#16232a"/>
+        <rect x="78" y="86" width="8" height="28" fill="#4a6570"/>
+        <rect x="86" y="88" width="52" height="24" fill="#4a6570"/>
+        <rect x="138" y="92" width="16" height="16" fill="#7e959e"/>
+        <text class="esquema-rotulo" x="28" y="70">punho</text>
+        <text class="esquema-rotulo" x="28" y="146">recebe o impacto</text>
+      </g>
+
+      <!-- LUVA 1 -->
+      <g class="esquema-parte" data-papel="luva" tabindex="0" role="button" aria-label="Luva">
+        <rect x="154" y="80" width="72" height="40" rx="2" fill="#4a6570"/>
+        <line x1="190" y1="80" x2="190" y2="120" stroke="#16232a" stroke-width="2"/>
+        <text class="esquema-rotulo" x="154" y="70">luva</text>
+        <text class="esquema-rotulo" x="154" y="146">conecta rosca a rosca</text>
+      </g>
+
+      <!-- HASTE -->
+      <g class="esquema-parte" data-papel="haste" tabindex="0" role="button" aria-label="Haste">
+        <rect x="226" y="90" width="330" height="20" fill="#4a6570"/>
+        <rect x="226" y="96" width="330" height="8" fill="#3b525c"/>
+        <text class="esquema-rotulo" x="226" y="80">haste</text>
+        <text class="esquema-rotulo" x="226" y="146">transmite impacto, rotação e limpeza</text>
+      </g>
+
+      <!-- LUVA 2 -->
+      <g class="esquema-parte" data-papel="luva" tabindex="0" role="button" aria-label="Luva">
+        <rect x="556" y="80" width="72" height="40" rx="2" fill="#4a6570"/>
+        <line x1="592" y1="80" x2="592" y2="120" stroke="#16232a" stroke-width="2"/>
+      </g>
+
+      <!-- HASTE 2 -->
+      <g class="esquema-parte" data-papel="haste" tabindex="0" role="button" aria-label="Haste">
+        <rect x="628" y="90" width="130" height="20" fill="#4a6570"/>
+        <rect x="628" y="96" width="130" height="8" fill="#3b525c"/>
+      </g>
+
+      <!-- BIT -->
+      <g class="esquema-parte" data-papel="bit" tabindex="0" role="button" aria-label="Bit">
+        <rect x="758" y="86" width="22" height="28" fill="#4a6570"/>
+        <path d="M780 74 h68 a10 10 0 0 1 10 10 v32 a10 10 0 0 1 -10 10 h-68 z" fill="#16232a"/>
+        <circle cx="862" cy="82" r="7" fill="#c3cdcb"/>
+        <circle cx="862" cy="100" r="7" fill="#c3cdcb"/>
+        <circle cx="862" cy="118" r="7" fill="#c3cdcb"/>
+        <circle cx="838" cy="76" r="6" fill="#c3cdcb"/>
+        <circle cx="838" cy="124" r="6" fill="#c3cdcb"/>
+        <text class="esquema-rotulo" x="758" y="64">bit</text>
+        <text class="esquema-rotulo" x="700" y="164">quebra a rocha</text>
+      </g>
+    </svg>
+
+    <div class="coluna-detalhe">
+      <div class="coluna-detalhe__texto" id="textoPeca"></div>
+      <div id="tabelaPeca"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CATÁLOGO ===================== -->
+<section class="faixa faixa--alta" id="catalogo">
+  <div class="interno">
+    <div class="cabeca-secao">
+      <h2>Catálogo consultável</h2>
+      <p>Filtre por família, rosca, diâmetro ou part number. Marque os itens para montar um pedido de cotação.</p>
+    </div>
+
+    <div class="filtros">
+      <div>
+        <label for="busca">Buscar por código, rosca ou detalhe</label>
+        <input id="busca" type="search" placeholder="ex.: T38 retrac, BR102, punho HL700" autocomplete="off">
+      </div>
+      <div>
+        <label for="filtroFamilia">Família</label>
+        <select id="filtroFamilia"></select>
+      </div>
+      <div>
+        <label for="filtroRosca">Rosca / conicidade</label>
+        <select id="filtroRosca"></select>
+      </div>
+    </div>
+
+    <div class="resumo-resultados" id="resumoResultados"></div>
+    <div class="envolve-tabela">
+      <table class="tabela">
+        <thead>
+          <tr>
+            <th>Família</th><th>Rosca</th><th>Ø mm</th><th>Ø pol</th><th>L mm</th><th>Detalhe</th><th>Part number</th><th></th>
+          </tr>
+        </thead>
+        <tbody id="corpoTabela"></tbody>
+      </table>
+    </div>
+    <button class="mais" id="verMais" hidden>Ver mais itens</button>
+  </div>
+</section>
+
+<!-- ===================== OPERAÇÃO ===================== -->
+<section class="faixa faixa--escura" id="operacao">
+  <div class="interno">
+    <div class="cabeca-secao">
+      <h2>Escolha do botão</h2>
+      <p>O formato do inserto de metal duro define o comportamento do bit na rocha. Indicações conforme o guia de códigos do catálogo Rodopar.</p>
+    </div>
+
+    <div class="grade-botoes" id="gradeBotoes"></div>
+
+    <div class="checklist">
+      <div>
+        <h3>Inspeção antes de descer a coluna</h3>
+        <ul>
+          <li>Furos de limpeza desobstruídos, frontais e laterais.</li>
+          <li>Botões sem trincas, lascas ou botão faltando.</li>
+          <li>Rosca do bit e da haste limpas, sem amassados nem rebarba.</li>
+          <li>Face do punho sem afundamento ou marca de martelamento.</li>
+          <li>Luva sem folga na rosca e com o batente íntegro.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Sinais de que a ferramenta precisa sair de operação</h3>
+        <ul>
+          <li>Queda na taxa de penetração com pressão e rotação normais.</li>
+          <li>Botão achatado ao ponto de perder a geometria original.</li>
+          <li>Aumento de vibração ou ruído fora do padrão no furo.</li>
+          <li>Desvio de furo repetido no mesmo trecho da malha.</li>
+          <li>Aquecimento anormal do punho ou da conexão.</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="nota">Os itens de inspeção acima são práticas gerais de perfuração de rocha, não recomendação técnica da Rodopar para uma operação específica. Critérios de troca, torque de aperto e afiação devem seguir o procedimento da sua mina e a orientação do fabricante da perfuratriz.</p>
+  </div>
+</section>
+
+<!-- ===================== GLOSSÁRIO ===================== -->
+<section class="faixa" id="glossario">
+  <div class="interno">
+    <div class="cabeca-secao">
+      <h2>Como isso funciona</h2>
+      <p>Para quem chegou aqui por curiosidade, ou para quem vai explicar o processo a alguém de fora da operação.</p>
+    </div>
+
+    <div id="listaGlossario"></div>
+
+    <div class="comparativo">
+      <div>
+        <h3>Top hammer</h3>
+        <p>O martelo fica na superfície. A onda de choque percorre punho, hastes e luvas até chegar ao bit. Montagem mais simples e ferramental mais barato, com perda de energia em cada conexão. Quanto mais fundo o furo, mais essa perda pesa.</p>
+      </div>
+      <div>
+        <h3>DTH, fundo de furo</h3>
+        <p>O martelo desce dentro do furo, logo acima do bit. O impacto chega direto na ferramenta, sem atravessar a coluna, o que sustenta a energia em furos profundos e ajuda a manter o furo reto. A coluna passa a servir para rotação, ar e avanço.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SERVIÇOS ===================== -->
+<section class="faixa faixa--alta" id="servicos">
+  <div class="interno">
+    <div class="cabeca-secao">
+      <h2>Fábrica</h2>
+      <p>Além da linha de mineração, a Rodopar atende petróleo e gás, petroquímica, siderurgia, naval, alimentos e bebidas e automotivo.</p>
+    </div>
+
+    <div class="grade-servicos">
+      <div class="servico">
+        <h3>Usinagem de alta precisão</h3>
+        <p>Peças de alta pressão (HP) e super alta pressão (SHP).</p>
+      </div>
+      <div class="servico">
+        <h3>Peças especiais</h3>
+        <p>Fabricação sob medida a partir de desenho, amostra ou croqui.</p>
+      </div>
+      <div class="servico">
+        <h3>Tratamento térmico</h3>
+        <p>Fornos de atmosfera controlada até 3,5 metros. Têmpera e revenimento, cementação, normalização e alívio de tensões.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== COTAÇÃO ===================== -->
+<section class="faixa" id="cotacao">
+  <div class="interno">
+    <div class="cabeca-secao">
+      <h2>Pedido de cotação</h2>
+      <p>Os itens marcados no catálogo aparecem aqui. Ajuste as quantidades e envie por WhatsApp ou e-mail.</p>
+    </div>
+
+    <div class="cotacao">
+      <div>
+        <ul class="lista-cotacao" id="listaCotacao"></ul>
+        <div class="acoes">
+          <button class="botao botao--cheio" id="enviarWhats">Enviar por WhatsApp</button>
+          <button class="botao" id="enviarEmail">Enviar por e-mail</button>
+          <button class="botao" id="limparLista">Limpar lista</button>
+        </div>
+      </div>
+      <div class="campos-contato">
+        <div>
+          <label for="cEmpresa">Empresa ou mina</label>
+          <input id="cEmpresa" type="text" autocomplete="organization">
+        </div>
+        <div>
+          <label for="cNome">Seu nome</label>
+          <input id="cNome" type="text" autocomplete="name">
+        </div>
+        <div>
+          <label for="cObs">Aplicação, tipo de rocha, perfuratriz</label>
+          <textarea id="cObs" placeholder="ex.: banco de 12 m, rocha abrasiva, perfuratriz HL700"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="rodape">
+  <div class="rodape__grade">
+    <div>
+      <h3>Contato</h3>
+      <p>
+        <a href="tel:+557133791330">(71) 3379-1330</a><br>
+        <a href="https://api.whatsapp.com/send?phone=5571993803830">WhatsApp (71) 99380-3830</a><br>
+        <a href="mailto:rodopar@rodopar.ind.br">rodopar@rodopar.ind.br</a>
+      </p>
+    </div>
+    <div>
+      <h3>Fábrica</h3>
+      <p>Loteamento Varandas Tropicais<br>Rua Araponga, 544, Qd 01 - Lote 31<br>Pitangueiras, Lauro de Freitas, BA<br>CEP 42701-330</p>
+    </div>
+    <div>
+      <h3>Atendimento</h3>
+      <p>Segunda a sexta, 7h às 17h<br>Em atividade desde 1991</p>
+      <p><a href="https://www.rodopar.net">rodopar.net</a></p>
+    </div>
+  </div>
+  <div class="rodape__base">
+    <span>Projeto independente de demonstração, publicado no GitHub Pages.</span>
+    <span>Dados do catálogo público. Conferência humana obrigatória.</span>
+  </div>
+</footer>
+
+<script src="assets/dados.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
