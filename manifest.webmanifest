@@ -1,0 +1,15 @@
+{
+  "name": "Apontamento de Perfuração",
+  "short_name": "Apontamento",
+  "description": "Lançamento de produção de perfuração em frente de lavra, com funcionamento offline.",
+  "start_url": "apontamento.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f1519",
+  "theme_color": "#0f1519",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "icone.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
