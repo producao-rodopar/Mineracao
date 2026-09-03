@@ -9,6 +9,7 @@
 <meta property="og:title" content="Rodopar — Ferramentas de perfuração para mineração">
 <meta property="og:description" content="Bits, hastes, luvas, punhos e bits DTH. Catálogo interativo e guia de coluna de perfuração.">
 <meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2210%22%20fill%3D%22%23121b21%22%2F%3E%3Crect%20x%3D%2227%22%20y%3D%228%22%20width%3D%2210%22%20height%3D%2222%22%20fill%3D%22%238fa2ad%22%2F%3E%3Cpath%20d%3D%22M18%2032h28v14c0%207-6%2011-14%2011s-14-4-14-11z%22%20fill%3D%22%23f2c11b%22%2F%3E%3Ccircle%20cx%3D%2225%22%20cy%3D%2249%22%20r%3D%223.4%22%20fill%3D%22%23121b21%22%2F%3E%3Ccircle%20cx%3D%2232%22%20cy%3D%2252%22%20r%3D%223.4%22%20fill%3D%22%23121b21%22%2F%3E%3Ccircle%20cx%3D%2239%22%20cy%3D%2249%22%20r%3D%223.4%22%20fill%3D%22%23121b21%22%2F%3E%3C%2Fsvg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -337,6 +338,17 @@ a{color:inherit}
   border-left:3px solid var(--oxido);padding:.7rem .9rem;
   background:rgba(178,74,43,.1);color:inherit;margin-top:1.2rem;
 }
+
+/* ---------------- acesso ao app do operador ---------------- */
+.app-operador{
+  display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;
+  background:var(--aco-800);border:var(--borda);border-left:3px solid var(--sinal);
+  border-radius:var(--raio);padding:1.4rem;margin-bottom:1.4rem;
+}
+.app-operador > div{flex:1 1 340px}
+.app-operador__titulo{font-size:1.2rem;margin-bottom:.5rem}
+.app-operador__texto{font-size:.92rem;color:#cdcfc9;margin:0;max-width:62ch}
+.app-operador .botao{flex:0 0 auto;padding:.9rem 1.6rem}
 
 /* ---------------- operação ---------------- */
 .operacao{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;align-items:start}
@@ -743,6 +755,18 @@ a{color:inherit}
       Custo por metro perfurado se decide no campo, não na compra. Abaixo, a inspeção
       de rotina e os sinais que antecedem uma parada.
     </p>
+  </div>
+
+  <div class="app-operador">
+    <div>
+      <h3 class="app-operador__titulo">App de apontamento de produção</h3>
+      <p class="app-operador__texto">
+        Lançamento de furo, metros, hastes e troca de ferramenta direto na frente de serviço.
+        Funciona sem sinal: os registros ficam no aparelho e sobem quando o sinal volta.
+        Uso interno — instale no celular antes de descer.
+      </p>
+    </div>
+    <a class="botao" href="apontamento.html">Abrir o app</a>
   </div>
 
   <div class="operacao">
