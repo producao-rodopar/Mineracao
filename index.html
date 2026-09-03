@@ -184,6 +184,9 @@ a{color:inherit}
 .peca[data-ativa="true"] .peca__botoes circle{fill:var(--sinal-escuro)}
 .peca--externa .peca__corpo{fill:#3c4a53}
 
+/* o atributo hidden nao vale dentro de SVG: precisa da regra abaixo */
+.conjunto[hidden]{display:none}
+
 /* revelação única no carregamento */
 .conjunto:not([hidden]) .peca{animation:surgir .5s ease-out both}
 .conjunto:not([hidden]) .peca:nth-of-type(2){animation-delay:.08s}
@@ -897,6 +900,7 @@ a{color:inherit}
       <a id="rpLinked" href="#" target="_blank" rel="noopener">LinkedIn</a>
       <a id="rpFace" href="#" target="_blank" rel="noopener">Facebook</a>
       <a id="rpSite" href="#" target="_blank" rel="noopener">Site oficial</a>
+      <a href="apontamento.html">Apontamento de produção (uso interno)</a>
     </nav>
   </div>
   <p class="rodape__nota">
