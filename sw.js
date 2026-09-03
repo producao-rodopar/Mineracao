@@ -6,7 +6,7 @@
    VERSAO abaixo. Sem isso o aparelho continua abrindo a versão
    antiga guardada no cache.
    ============================================================ */
-const VERSAO = 'apontamento-v2';
+const VERSAO = 'apontamento-v3';
 
 const ARQUIVOS = [
   'apontamento.html',

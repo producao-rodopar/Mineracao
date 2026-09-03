@@ -287,24 +287,24 @@ button,input,select,textarea{font:inherit}
       </div>
       <div class="campo">
         <label for="fDiametro">Diâmetro do bit (mm)</label>
-        <input id="fDiametro" inputmode="decimal">
+        <input id="fDiametro" autocomplete="off" inputmode="decimal">
       </div>
     </div>
     <div class="dupla">
       <div class="campo">
         <label for="fProfundidade">Profundidade perfurada (m)</label>
-        <input id="fProfundidade" inputmode="decimal">
+        <input id="fProfundidade" autocomplete="off" inputmode="decimal">
       </div>
       <div class="campo">
         <label for="fTempo">Tempo de perfuração (min)</label>
-        <input id="fTempo" inputmode="numeric">
+        <input id="fTempo" autocomplete="off" inputmode="numeric">
       </div>
     </div>
     <div class="campo">
       <label for="fHastes">Hastes na coluna</label>
       <div class="contador">
         <button type="button" data-passo="-1" data-alvo="fHastes" aria-label="Menos uma haste">−</button>
-        <input id="fHastes" inputmode="numeric" value="1">
+        <input id="fHastes" autocomplete="off" inputmode="numeric" value="1">
         <button type="button" data-passo="1" data-alvo="fHastes" aria-label="Mais uma haste">+</button>
       </div>
       <p class="campo__dica">Quantidade de hastes montadas para alcançar a profundidade deste furo.</p>
@@ -323,7 +323,7 @@ button,input,select,textarea{font:inherit}
     <h2 class="bloco__titulo">Observações</h2>
     <div class="campo">
       <label for="fObs">Ocorrência, parada, condição de rocha</label>
-      <textarea id="fObs" rows="2"></textarea>
+      <textarea id="fObs" rows="2" autocomplete="off"></textarea>
     </div>
   </div>
 
@@ -641,7 +641,7 @@ $('#trocas').innerHTML = CONFIG.componentes.map((c) => `
       </div>
       <div class="campo">
         <label for="metros-${c.id}">Metros acumulados da peça retirada</label>
-        <input id="metros-${c.id}" inputmode="decimal">
+        <input id="metros-${c.id}" inputmode="decimal" autocomplete="off">
         <p class="campo__dica">Se não houver controle por peça, deixe vazio. Não estime.</p>
       </div>` : ''}
     </div>
@@ -742,7 +742,7 @@ $('#gravarFuro').addEventListener('click', () => {
 
   registrarEvento(navigator.onLine ? 'furo-gravado' : 'furo-gravado-offline',
     'furo ' + idFuro + ' · ' + prof + ' m · ' + trocas.length + ' troca(s)');
-  limparFuro(true);
+  limparFuro(false);
   barraTurno();
   mostrarRecado('Furo ' + idFuro + ' gravado' + (navigator.onLine ? '.' : ' sem sinal.'));
   $('#fFuro').focus();
@@ -966,6 +966,7 @@ function desenharLog() {
    INICIALIZAÇÃO
    ============================================================ */
 preencherTurno();
+limparFuro(false);   // campos de furo sempre em branco na abertura
 barraTurno();
 desenharIndicadores();
 desenharRegistros();
